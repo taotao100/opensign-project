@@ -2,20 +2,28 @@ package org.owasp.oss.crypto;
 
 import java.security.Security;
 
+import junit.framework.Test;
+import junit.framework.TestSuite;
+
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.owasp.oss.TestBase;
 
-import junit.framework.TestCase;
-
-public class CryptoTest extends TestCase {
+public class CryptoTest extends TestBase {
 
 	protected void setUp() throws Exception {
 		super.setUp();
-		Security.addProvider(new BouncyCastleProvider());
+		if (Security.getProvider("BC") == null)
+			Security.addProvider(new BouncyCastleProvider());		
 	}
 
 	protected void tearDown() throws Exception {
 		super.tearDown();
 	}
+	
+    public static Test suite()
+    {
+        return new TestSuite( CryptoTest.class );
+    }	
 	
 	// dummy signature test
 	public void testSign(){
