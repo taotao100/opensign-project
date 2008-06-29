@@ -2,10 +2,7 @@ package org.owasp.oss;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.security.Provider;
 import java.security.Security;
-import java.util.Iterator;
-import java.util.Set;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.owasp.oss.crypto.Crypto;

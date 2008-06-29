@@ -66,7 +66,7 @@ public class HttpRequest {
 		
 		// Getting requested-path information
 		URI uri = exchange.getRequestURI();
-		String query = uri.getQuery();
+		//String query = uri.getQuery();
 		String path = uri.getPath();
 
 		return new HttpRequest(method, path, parameters);

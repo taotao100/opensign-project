@@ -21,8 +21,7 @@ public class StaticFileHandler implements HttpHandler {
 	private static final String DEFAULT_FILE = "index.html";
 
 	public void handle(HttpExchange exchange) throws IOException {
-
-		OutputStream rs;
+		
 		try {
 
 			HttpRequest req = HttpRequest.create(exchange);

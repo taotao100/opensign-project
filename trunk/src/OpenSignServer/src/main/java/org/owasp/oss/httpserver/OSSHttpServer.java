@@ -2,7 +2,6 @@ package org.owasp.oss.httpserver;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.util.logging.FileHandler;
 
 import com.sun.net.httpserver.HttpContext;
 import com.sun.net.httpserver.HttpServer;
