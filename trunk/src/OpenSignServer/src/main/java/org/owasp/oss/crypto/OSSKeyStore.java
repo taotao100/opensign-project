@@ -87,8 +87,9 @@ public class OSSKeyStore {
 	}
 	
 	private void load() throws CryptoException {
-		try {
+		try {			
 			FileOutputStream os = new FileOutputStream(KEYSTORE_NAME);
+			_keyStore.load(null, null);
 			_keyStore.store(os, KEYSTORE_PASSWD.toCharArray());
 			os.close();
 		} catch (Exception e) {			
