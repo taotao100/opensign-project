@@ -17,8 +17,13 @@
 
 *) EXECUTING PACKAGE
    
+   Once project is inegrated in eclipse, execute class OSSMain.
+   
+   TODO: create mavnen target
+   
+   Not working any more due to dependencies:
    Place BouncyCasle (bcprov-jdk16-136.jar) in the same directory as the server and execute:
-   java -jar OpenSignServer-1.0-SNAPSHOT.jar
+   java -jar OpenSignServer-1.0-SNAPSHOT.jar   
    
 
 *) NOTES
