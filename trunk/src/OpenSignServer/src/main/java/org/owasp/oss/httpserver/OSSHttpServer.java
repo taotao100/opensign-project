@@ -31,9 +31,10 @@ public class OSSHttpServer {
 				MAX_CONNECTIONS);
 		HttpContext httpContext = null;
 		httpContext = _httpServer.createContext("/login", new LoginHandler());
-		httpContext = _httpServer.createContext("/ca/csr", new CsrHandler());
-		httpContext = _httpServer.createContext("/", new FileHandler());		
-		httpContext.setAuthenticator(new BasicAuthenticatorImpl("welcome"));		
+		httpContext.setAuthenticator(new BasicAuthenticatorImpl("welcome"));
+		
+		httpContext = _httpServer.createContext("/ca/csr", new CsrHandler());		
+		httpContext = _httpServer.createContext("/", new FileHandler());						
 		_httpServer.setExecutor(null);
 		_httpServer.start();
 
