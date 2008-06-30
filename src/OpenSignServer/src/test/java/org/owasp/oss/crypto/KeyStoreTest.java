@@ -24,6 +24,8 @@ import org.owasp.oss.TestBase;
 // Export of certificate:
 // keytool -exportcert -alias test -file test.cer
 // 
+// Generation of a CSR
+// keytool -certreq -alias sign1 -file csr1.pem -keypass 123456 -keystore csr_keystore -storepass 123456
 public class KeyStoreTest extends TestBase {
 	
 	
@@ -78,7 +80,7 @@ public class KeyStoreTest extends TestBase {
 		
 		store.setKeyEntry("test1", keyPair.getPrivate(), certChain);
 		store.store();
-		PrivateKey privKey = store.getKey("test1");
+		PrivateKey privKey = store.getPrivateKey("test1");
 		assertEquals(privKey, keyPair.getPrivate());
 	}
 }
