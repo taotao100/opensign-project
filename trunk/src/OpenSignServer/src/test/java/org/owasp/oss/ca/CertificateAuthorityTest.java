@@ -13,9 +13,7 @@ import org.bouncycastle.jce.X509Principal;
 import org.owasp.oss.TestBase;
 import org.owasp.oss.crypto.OSSKeyStore;
 
-public class CaTest extends TestBase {
-
-	protected static final String TEST_CSR = "csr1.pem";
+public class CertificateAuthorityTest extends TestBase {
 
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -26,7 +24,7 @@ public class CaTest extends TestBase {
 	}
 
 	public static Test suite() {
-		return new TestSuite(CaTest.class);
+		return new TestSuite(CertificateAuthorityTest.class);
 	}
 	
 	public void testBuildCsr() throws Exception {

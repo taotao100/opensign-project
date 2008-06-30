@@ -42,7 +42,7 @@ public class OSSMain {
 		Security.addProvider(new BouncyCastleProvider());
 		Crypto crypto = Crypto.getInstance();        
 
-		OSSHttpServer openSignServer = OSSHttpServer.getOSSHttpServer();
+		OSSHttpServer openSignServer = OSSHttpServer.getInstance();
 
 		try {
 			if (init){

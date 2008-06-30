@@ -3,7 +3,7 @@ package org.owasp.oss;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.owasp.oss.ca.CaTest;
+import org.owasp.oss.httpserver.OSSHttpServerTest;
 
 public class AllTests {
 
@@ -13,7 +13,8 @@ public class AllTests {
 		//suite.addTest(MainTest.suite());
 		//suite.addTest(CryptoTest.suite());
 		//suite.addTest(KeyStoreTest.suite());
-		suite.addTest(CaTest.suite());
+		//suite.addTest(CertificateAuthorityTest.suite());
+		suite.addTest(OSSHttpServerTest.suite());
 		//$JUnit-END$
 		return suite;
 	}
