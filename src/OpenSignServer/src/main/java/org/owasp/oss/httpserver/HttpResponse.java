@@ -20,7 +20,7 @@ public class HttpResponse {
 	protected int _status = 200;
 
 	public static enum MimeType {
-		HTML, CSS
+		HTML, CSS, TEXT
 	}
 
 	public static enum ErrorType {
@@ -95,6 +95,8 @@ public class HttpResponse {
 			_headers.add("Content-Type", "text/html");
 		else if (type == MimeType.CSS)
 			_headers.add("Content-Type", "text/css");
+		else if (type == MimeType.TEXT)
+			_headers.add("Content-Type", "text/plain");
 	}
 
 	public void send(InputStream body) throws IOException {

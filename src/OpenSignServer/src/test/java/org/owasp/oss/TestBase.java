@@ -18,6 +18,7 @@ public class TestBase extends TestCase {
 	
 	protected static final String TEST_RESOURCES_PATH = "resources/test/";
 	protected static final String TEST_CERTIFICATE = "test.cer";	
+	protected static final String TEST_CSR = "csr1.pem";
 	
 	public TestBase(){
 		
@@ -38,6 +39,13 @@ public class TestBase extends TestCase {
 	protected InputStream loadFile(String fileName) throws Exception {
 		return new FileInputStream(TEST_RESOURCES_PATH + fileName);
 	}
+	
+	protected byte[] loadFileBytes(String fileName) throws Exception {
+		InputStream bodyStream = loadFile(TEST_CSR);
+		byte[] fileBytes = new byte[bodyStream.available()];
+		bodyStream.read(fileBytes);
+		return fileBytes;
+	}	
 	
 	protected void writeFile(String fileName, byte[] data) throws Exception {
 		FileOutputStream os = new FileOutputStream(TEST_RESOURCES_PATH + fileName);

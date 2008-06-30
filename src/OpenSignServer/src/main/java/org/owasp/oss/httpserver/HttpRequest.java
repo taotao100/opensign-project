@@ -1,5 +1,7 @@
 package org.owasp.oss.httpserver;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -22,11 +24,14 @@ public class HttpRequest {
 
 	private String _path = null;
 	
+	private byte[] _bodyBytes = null;
+	
 	Map<String, String> _parameters = null;
 
-	private HttpRequest(Method method, String path, Map<String, String> parameters) {
+	private HttpRequest(Method method, String path, byte[] bodyBytes, Map<String, String> parameters) {
 		_method = method;
 		_path = path;
+		_bodyBytes = bodyBytes;
 		_parameters = parameters;
 	}
 
@@ -57,11 +62,18 @@ public class HttpRequest {
 
 		String bodyLenStr = headers.getFirst("Content-Length");
 		
-		if (bodyLenStr != null){
+		byte[] bodyBytes = null;
+		if (bodyLenStr != null){			
 			
-			int bodyLen = Integer.parseInt(bodyLenStr);			
-			if (bodyLen > 0)
-				parameters = HttpRequest.parseParameter(body, bodyLen);			
+			int bodyLen = Integer.parseInt(bodyLenStr);
+			bodyBytes = new byte[bodyLen];
+			ByteArrayOutputStream os = new ByteArrayOutputStream(bodyLen);
+			int readByteNum = 0;
+			while ((readByteNum = body.read(bodyBytes)) > 0){
+				os.write(bodyBytes, 0, readByteNum);									
+			}
+			bodyBytes = os.toByteArray();
+			parameters = HttpRequest.parseParameter(new ByteArrayInputStream(bodyBytes), bodyBytes.length);
 		}
 		
 		// Getting requested-path information
@@ -69,7 +81,7 @@ public class HttpRequest {
 		//String query = uri.getQuery();
 		String path = uri.getPath();
 
-		return new HttpRequest(method, path, parameters);
+		return new HttpRequest(method, path, bodyBytes, parameters);
 
 	}
 
@@ -106,6 +118,10 @@ public class HttpRequest {
 	
 	public String getParameterValue(String key){
 		return _parameters.get(key);
+	}
+	
+	public byte[] getBodyBytes() {
+		return _bodyBytes;
 	}
 
 	public String getPath() {

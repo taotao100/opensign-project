@@ -3,6 +3,8 @@ package org.owasp.oss.httpserver;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 
+import org.owasp.oss.ca.CsrHandler;
+
 import com.sun.net.httpserver.HttpContext;
 import com.sun.net.httpserver.HttpServer;
 
@@ -20,7 +22,7 @@ public class OSSHttpServer {
 
 	}
 
-	static public OSSHttpServer getOSSHttpServer() {
+	static public OSSHttpServer getInstance() {
 		return _ossHttpServer;
 	}
 
@@ -29,8 +31,9 @@ public class OSSHttpServer {
 				MAX_CONNECTIONS);
 		HttpContext httpContext = null;
 		httpContext = _httpServer.createContext("/login", new LoginHandler());
-		httpContext.setAuthenticator(new BasicAuthenticatorImpl("welcome"));
-		httpContext = _httpServer.createContext("/", new FileHandler());
+		httpContext = _httpServer.createContext("/ca/csr", new CsrHandler());
+		httpContext = _httpServer.createContext("/", new FileHandler());		
+		httpContext.setAuthenticator(new BasicAuthenticatorImpl("welcome"));		
 		_httpServer.setExecutor(null);
 		_httpServer.start();
 
