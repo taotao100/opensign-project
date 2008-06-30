@@ -51,5 +51,10 @@ public class TestBase extends TestCase {
 		FileOutputStream os = new FileOutputStream(TEST_RESOURCES_PATH + fileName);
 		os.write(data);
 	}
+	
+	// For getting Maven tests to work
+	public void testDummy(){
+		assertTrue(true);
+	}
 
 }

@@ -4,7 +4,7 @@ import java.security.InvalidKeyException;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
+import java.security.PrivateKey;
 import java.security.Signature;
 import java.security.SignatureException;
 
@@ -16,7 +16,7 @@ public class Crypto {
 	
 	private static Crypto _crypto = new Crypto();
 	
-	private Crypto(){
+	private Crypto(){		
 	}
 	
 	public static KeyPair generateKeyPair() throws CryptoException {
@@ -34,11 +34,11 @@ public class Crypto {
 	}
 		
 	// dummy sign method
-	public byte[] sign(byte[] data){
+	public byte[] sign(PrivateKey privkey, byte[] data){
 		
 		try {
 			Signature sig = Signature.getInstance("SHA1WithRSA");
-			sig.initSign(_keyPair.getPrivate());
+			sig.initSign(privkey);
 			sig.update(data);
 			return sig.sign();			
 		} catch (InvalidKeyException e) {
