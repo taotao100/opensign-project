@@ -1,11 +1,10 @@
 package org.owasp.oss.crypto;
 
-import java.security.Security;
+import java.security.KeyPair;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.owasp.oss.TestBase;
 
 public class CryptoTest extends TestBase {
@@ -24,9 +23,10 @@ public class CryptoTest extends TestBase {
     }	
 	
 	// dummy signature test
-	public void testSign(){
+	public void testSign() throws Exception {
 		Crypto c = Crypto.getInstance();
-		byte[] signature = c.sign("test".getBytes());
+		KeyPair keyPair = Crypto.generateKeyPair();
+		byte[] signature = c.sign(keyPair.getPrivate(), "test".getBytes());
 		assertNotNull(signature);
 		assertTrue(signature.length > 1);
 	}
