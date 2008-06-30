@@ -30,7 +30,7 @@ public class OSSHttpServer {
 		HttpContext httpContext = null;
 		httpContext = _httpServer.createContext("/login", new LoginHandler());
 		httpContext.setAuthenticator(new BasicAuthenticatorImpl("welcome"));
-		httpContext = _httpServer.createContext("/", new StaticFileHandler());
+		httpContext = _httpServer.createContext("/", new FileHandler());
 		_httpServer.setExecutor(null);
 		_httpServer.start();
 

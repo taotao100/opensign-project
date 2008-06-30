@@ -1,12 +1,15 @@
 package org.owasp.oss.httpserver;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.security.cert.Certificate;
 
 import org.bouncycastle.util.encoders.Base64;
-import org.owasp.oss.crypto.Crypto;
+import org.owasp.oss.ca.CertificationAuthority;
+import org.owasp.oss.ca.CertificationAuthorityException;
 import org.owasp.oss.httpserver.HttpResponse.ErrorType;
 import org.owasp.oss.httpserver.HttpResponse.MimeType;
 
@@ -14,7 +17,7 @@ import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
-public class StaticFileHandler implements HttpHandler {
+public class FileHandler implements HttpHandler {
 
 	private static final String STATIC_FILES_PATH = "www";
 
@@ -62,24 +65,31 @@ public class StaticFileHandler implements HttpHandler {
 
 				// Get response body
 				OutputStream responseBody = exchange.getResponseBody();
+				 
 
 				byte[] bytesToSign = req.getParameterValue("sign").getBytes();
-
-				Crypto c = Crypto.getInstance();
+				
+				CertificationAuthority ca = new CertificationAuthority();
+				Certificate cert = ca.processCsr(new ByteArrayInputStream(bytesToSign));
+				
 				responseBody
-						.write("--------------------SIGNATURE BEGIN--------------------\r\n"
+						.write("-------BEGIN NEW CERTIFICATE-------\r\n"
 								.getBytes());
-				responseBody.write(Base64.encode(c.sign(bytesToSign)));
+				responseBody.write(Base64.encode(cert.getEncoded()));
 				responseBody
-						.write("\r\n---------------------SIGNATURE END---------------------"
+						.write("\r\n-------END NEW CERTIFICATE-------"
 								.getBytes());
 
 				// Close the responseBody
 				responseBody.close();
 			}
 		} catch (HttpHandlerException e) {
+			e.printStackTrace();
 			HttpResponse.sendErrorPage(ErrorType.SERVICE_UNAVAILABLE, exchange);
-		}
+		} catch (Exception e){
+			e.printStackTrace();
+			HttpResponse.sendErrorPage(ErrorType.SERVICE_UNAVAILABLE, exchange);
+		} 
 
 		HttpResponse.sendErrorPage(ErrorType.FORBIDDEN, exchange);
 	}

@@ -3,18 +3,21 @@ package org.owasp.oss.crypto;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.security.KeyPair;
 import java.security.KeyStore;
 import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateFactory;
+import java.util.Enumeration;
 
-import com.sun.org.apache.xml.internal.serialize.OutputFormat;
+import org.owasp.oss.ca.CertificationAuthority;
 
 public class OSSKeyStore {
 
 	private static OSSKeyStore _instance = null;
 
-	private static final String KEYSTORE_NAME = "oss_keystore.p12";
+	private static final String KEYSTORE_NAME = "resources/live/oss_keystore.p12";
 
 	private static final String KEYSTORE_PASSWD = "pass";
 	//private static final String KEYSTORE_PASSWD = "storepasswd";
@@ -24,11 +27,11 @@ public class OSSKeyStore {
 	private OSSKeyStore() throws CryptoException {
 
 		try {
-			_keyStore = KeyStore.getInstance("PKCS12", "BC");
+			_keyStore = KeyStore.getInstance("BKS", "BC");
 			File file = new File(KEYSTORE_NAME);
 			
 			if (!file.exists())
-				_keyStore.load(null, null);
+				create();
 			else			
 				load();
 			
@@ -59,13 +62,26 @@ public class OSSKeyStore {
 		}
 	}
 	
-	public PrivateKey getKey(String alias) throws CryptoException {
+	public PrivateKey getPrivateKey(String alias) throws CryptoException {
 		try {
+			if (!_keyStore.isKeyEntry(alias))
+				throw new CryptoException("Key not in store");			
 			return (PrivateKey)_keyStore.getKey(alias, KEYSTORE_PASSWD.toCharArray());
 		} catch (Exception e) {
 			throw new CryptoException(e);
 		}
 	}	
+	
+	public PublicKey getPublicKey(String alias) throws CryptoException {
+		try {
+			//if (!_keyStore.isCertificateEntry(alias))
+			//	throw new CryptoException("Certificate not in store");
+			Certificate[] certificates = _keyStore.getCertificateChain(alias);
+			return certificates[0].getPublicKey();
+		} catch (Exception e) {
+			throw new CryptoException(e);
+		}
+	}		
 
 	public void setKeyEntry(String alias, PrivateKey privKey,
 			Certificate[] chain) throws CryptoException {
@@ -86,12 +102,35 @@ public class OSSKeyStore {
 		}
 	}
 	
+	public void create() throws CryptoException {
+		try {			
+			KeyPair pair = Crypto.generateKeyPair();
+			_keyStore.load(null, null);
+		
+			//TODO: Generate propper values
+			Certificate[] certChain = new Certificate[1];
+			CertificationAuthority ca = new CertificationAuthority();
+			certChain[0] = ca.makeCertificate(pair.getPrivate(), pair.getPublic());
+			
+			setKeyEntry("signkey1", pair.getPrivate(), certChain);
+			store();
+			
+			if (!_keyStore.isKeyEntry("signkey1"))
+				throw new CryptoException("Key not in store");				
+
+		} catch (Exception e) {			
+			throw new CryptoException(e);
+		}
+	}
+	
 	private void load() throws CryptoException {
 		try {			
-			FileOutputStream os = new FileOutputStream(KEYSTORE_NAME);
-			_keyStore.load(null, null);
-			_keyStore.store(os, KEYSTORE_PASSWD.toCharArray());
-			os.close();
+			FileInputStream is = new FileInputStream(KEYSTORE_NAME);
+			_keyStore.load(is, KEYSTORE_PASSWD.toCharArray());
+			Enumeration<String> e = _keyStore.aliases();
+			while(e.hasMoreElements())
+				System.out.println(e.nextElement());
+					
 		} catch (Exception e) {			
 			throw new CryptoException(e);
 		}

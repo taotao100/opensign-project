@@ -11,9 +11,7 @@ import org.owasp.oss.TestBase;
 public class CryptoTest extends TestBase {
 
 	protected void setUp() throws Exception {
-		super.setUp();
-		if (Security.getProvider("BC") == null)
-			Security.addProvider(new BouncyCastleProvider());		
+		super.setUp();	
 	}
 
 	protected void tearDown() throws Exception {

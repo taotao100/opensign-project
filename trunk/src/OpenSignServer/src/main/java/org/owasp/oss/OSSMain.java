@@ -2,40 +2,52 @@ package org.owasp.oss;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.security.Provider;
 import java.security.Security;
+import java.util.Iterator;
+import java.util.Set;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.owasp.oss.crypto.Crypto;
+import org.owasp.oss.crypto.OSSKeyStore;
 import org.owasp.oss.httpserver.OSSHttpServer;
 
 public class OSSMain {
+	
+	public void printSecurityProviders(){
+		
+		Provider[] providers = Security.getProviders();
+		for (int i = 0; i < providers.length; i++) {
+			Provider provider = providers[i];
+			System.out.println("Provider name: " + provider.getName());
+			System.out.println("Provider information: " + provider.getInfo());
+			System.out.println("Provider version: " + provider.getVersion());
+			Set entries = provider.entrySet();
+			Iterator iterator = entries.iterator();
+			while (iterator.hasNext()) {
+				System.out
+						.println("===========================================");
+				System.out.println("Property entry: " + iterator.next());
+			}
+		}
+	}
 
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
 		
+		boolean init = true;
+		
 		Security.addProvider(new BouncyCastleProvider());
-		Crypto crypto = Crypto.getInstance();
-//		
-//		Provider[] providers = Security.getProviders();
-//        for (int i = 0; i < providers.length; i++) {
-//            Provider provider = providers[i];
-//            System.out.println("Provider name: " + provider.getName());
-//            System.out.println("Provider information: " + provider.getInfo());
-//            System.out.println("Provider version: " + provider.getVersion());
-//            Set entries = provider.entrySet();
-//            Iterator iterator = entries.iterator();
-//            while (iterator.hasNext()) {
-//                System.out.println("===========================================");
-//                System.out.println("Property entry: " + iterator.next());
-//            }
-//        }
-            
+		Crypto crypto = Crypto.getInstance();        
 
 		OSSHttpServer openSignServer = OSSHttpServer.getOSSHttpServer();
 
 		try {
+			if (init){
+				OSSKeyStore.getInstance().create();
+			}
 			openSignServer.start();
 			System.out.println("Press enter to quit server");
 			new BufferedReader(new InputStreamReader(System.in)).readLine();

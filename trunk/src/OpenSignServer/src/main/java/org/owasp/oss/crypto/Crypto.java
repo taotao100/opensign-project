@@ -17,16 +17,15 @@ public class Crypto {
 	private static Crypto _crypto = new Crypto();
 	
 	private Crypto(){
+	}
+	
+	public static KeyPair generateKeyPair() throws CryptoException {
 		try {
 			KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA", "BC");
 			kpg.initialize(1024);
-			_keyPair = kpg.generateKeyPair();
-		} catch (NoSuchAlgorithmException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (NoSuchProviderException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			return kpg.generateKeyPair();
+		} catch (Exception e) {			
+			throw new CryptoException(e);
 		}
 	}
 	
