@@ -86,9 +86,11 @@ public class FileHandler implements HttpHandler {
 		} catch (HttpHandlerException e) {
 			e.printStackTrace();
 			HttpResponse.sendErrorPage(ErrorType.SERVICE_UNAVAILABLE, exchange);
+			return;
 		} catch (Exception e){
 			e.printStackTrace();
 			HttpResponse.sendErrorPage(ErrorType.SERVICE_UNAVAILABLE, exchange);
+			return;
 		} 
 
 		HttpResponse.sendErrorPage(ErrorType.FORBIDDEN, exchange);
