@@ -20,8 +20,10 @@
 			<version>136</version>      
     </dependency>      
   </dependencies>  
+  
   <build>
     <plugins>
+    
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -30,21 +32,37 @@
           <target>1.6</target>
         </configuration>
       </plugin>
-
+      
 			<plugin>
-       <artifactId>maven-assembly-plugin</artifactId>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>      
         <configuration>
-					<descriptors>
-            <descriptor>descriptor.xml</descriptor>
-          </descriptors>
           <archive>
             <manifest>
-              <mainClass>org.owasp.oss.OSSMain</mainClass>
               <addClasspath>true</addClasspath>
+              <mainClass>org.owasp.oss.OSSMain</mainClass>
             </manifest>
           </archive>
         </configuration>
-      </plugin>     
+      </plugin>      
+
+			<plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <configuration>
+					<descriptors>
+            <descriptor>descriptor_tar.gz.xml</descriptor>
+          </descriptors>
+        </configuration>
+			  <executions>
+				  <execution>
+					  <id>release-assembly</id>
+							<phase>package</phase>
+							<goals>
+								<goal>attached</goal>
+							</goals>
+						</execution>
+					</executions>        
+       </plugin>          
  
     </plugins>
   </build>
