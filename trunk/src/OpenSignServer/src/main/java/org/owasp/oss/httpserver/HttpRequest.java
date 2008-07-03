@@ -11,6 +11,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+import org.apache.log4j.Logger;
+
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 
@@ -18,6 +20,8 @@ import com.sun.net.httpserver.HttpExchange;
  * This class parses an http request and exposes the values of interest
  */
 public class HttpRequest {
+	
+	private static Logger log = Logger.getLogger(HttpRequest.class);
 
 	private static enum Method {
 		GET, POST, PUT, DELETE
@@ -43,6 +47,8 @@ public class HttpRequest {
 
 		// Determining method
 		Method method;
+		
+		log.info("Creating HttpRequest object, with following properties:");
 
 		if (exchange.getRequestMethod().equals("GET"))
 			method = Method.GET;
@@ -56,6 +62,14 @@ public class HttpRequest {
 			throw new org.owasp.oss.httpserver.HttpHandlerException(
 					"Could not create HttpRequest, no vaild method");
 
+		log.info("\t Method: " + method);
+		
+		// Getting requested-path information
+		URI uri = exchange.getRequestURI();			
+		//String query = uri.getQuery();
+		String path = uri.getPath();		
+		log.info("\t Path: " + path);
+		
 		Headers headers = exchange.getRequestHeaders();
 
 		// Parsing body
@@ -64,6 +78,8 @@ public class HttpRequest {
 		Map<String, String> parameters = null;
 
 		String bodyLenStr = headers.getFirst("Content-Length");
+		
+		log.info("\t Body length: " + bodyLenStr);
 		
 		byte[] bodyBytes = null;
 		if (bodyLenStr != null){			
@@ -78,11 +94,6 @@ public class HttpRequest {
 			bodyBytes = os.toByteArray();
 			parameters = HttpRequest.parseParameter(new ByteArrayInputStream(bodyBytes), bodyBytes.length);
 		}
-		
-		// Getting requested-path information
-		URI uri = exchange.getRequestURI();
-		//String query = uri.getQuery();
-		String path = uri.getPath();
 
 		return new HttpRequest(method, path, bodyBytes, parameters);
 
@@ -109,6 +120,7 @@ public class HttpRequest {
 							"UTF-8");
 					String value = URLDecoder.decode(current.substring(index + 1),
 							"UTF-8");
+					log.info("Parameter: " + key + " = " + value);
 					parameters.put(key, value);
 				}
 			}

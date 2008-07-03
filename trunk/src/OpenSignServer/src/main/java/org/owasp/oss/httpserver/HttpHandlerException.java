@@ -2,15 +2,15 @@ package org.owasp.oss.httpserver;
 
 public class HttpHandlerException extends Exception {
 	
-	HttpHandlerException(String message){
+	public HttpHandlerException(String message){
 		super(message);
 	}
     
-	HttpHandlerException(String message, Throwable cause){
+	public HttpHandlerException(String message, Throwable cause){
 		super(message, cause);
 	}
 	
-	HttpHandlerException(Throwable cause){
+	public HttpHandlerException(Throwable cause){
 		super(cause);		
 	}
 }

@@ -38,7 +38,10 @@ public class HttpResponse {
 			throws IOException {
 
 		String errorPage = null;
-
+		
+		Headers responseHeaders = exchange.getResponseHeaders();
+		responseHeaders.set("Content-Type", "text/html");
+      
 		if (errorType == ErrorType.FORBIDDEN) {
 			errorPage = "<head><title>Error</title></head><body><p><h1>Forbidden</h1></p><hr></body></html>";
 			exchange.sendResponseHeaders(403, errorPage.length());
@@ -57,7 +60,7 @@ public class HttpResponse {
 		
 		// only plain text sent
 		Headers responseHeaders = exchange.getResponseHeaders();
-		responseHeaders.set("Content-Type", "text/plain");
+		responseHeaders.set("Content-Type", "text/html");
 
 		// response is OK (200)
 		exchange.sendResponseHeaders(200, 0);
