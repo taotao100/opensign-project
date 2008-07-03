@@ -11,12 +11,16 @@ import java.security.cert.Certificate;
 import java.security.cert.CertificateFactory;
 import java.util.Enumeration;
 
+import org.apache.log4j.Logger;
 import org.owasp.oss.ca.CertificationAuthority;
+import org.owasp.oss.httpserver.OSSHttpServer;
 
 /**
  * This class manages a key store file.
  */
 public class OSSKeyStore {
+	
+	private static Logger log = Logger.getLogger(OSSHttpServer.class);
 
 	private static OSSKeyStore _instance = null;
 
@@ -105,6 +109,9 @@ public class OSSKeyStore {
 	}
 	
 	public void create() throws CryptoException {
+		
+		log.info("Creating new key store: " + KEYSTORE_NAME);
+		
 		try {			
 			KeyPair pair = Crypto.generateKeyPair();
 			_keyStore.load(null, null);
@@ -121,7 +128,7 @@ public class OSSKeyStore {
 
 		} catch (Exception e) {			
 			throw new CryptoException(e);
-		}
+		}				
 	}
 	
 	private void load() throws CryptoException {
@@ -129,8 +136,12 @@ public class OSSKeyStore {
 			FileInputStream is = new FileInputStream(KEYSTORE_NAME);
 			_keyStore.load(is, KEYSTORE_PASSWD.toCharArray());
 			Enumeration<String> e = _keyStore.aliases();
+			
+			log.info("Key store " + KEYSTORE_NAME + " loaded");
+			
+			log.info("Following keys available:");
 			while(e.hasMoreElements())
-				System.out.println(e.nextElement());
+				log.info("\t " + e.nextElement());
 					
 		} catch (Exception e) {			
 			throw new CryptoException(e);

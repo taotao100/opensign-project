@@ -1,64 +1,37 @@
 package org.owasp.oss;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.security.Provider;
 import java.security.Security;
-import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Set;
-import java.util.logging.FileHandler;
-import java.util.logging.SimpleFormatter;
 
+import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.owasp.oss.crypto.Crypto;
 import org.owasp.oss.crypto.OSSKeyStore;
 import org.owasp.oss.httpserver.OSSHttpServer;
-
-import org.apache.log4j.BasicConfigurator;
-import org.apache.log4j.Logger;
-import org.apache.log4j.PropertyConfigurator;
 
 /**
  * OpenSign Server main class
  */
 public class OSSMain {
 	private static Logger log = Logger.getLogger(OSSMain.class);
-	private static Configuration conf = null;
+	private static Configuration conf = Configuration.getInstance();	
 
 	/**
 	 * This method sets up the logger
 	 */
 	static public void configureLogger() {
-
-		//BasicConfigurator.configure();
-		PropertyConfigurator.configure("log4j.properties");
-		log.info("config logger");
-		log.debug("ASDF");
-		log.error("ASDFASDF");
-		// try {
-		// conf = Configuration.getInstance();
-		// FileHandler fh = new
-		// FileHandler(Configuration.getInstance().getValue("LOG_FILE"));
-		// fh.setFormatter(new SimpleFormatter());
-		// log.addHandler(fh);
-		//			
-		// String logLevel = conf.getValue("LOG_LEVEL");
-		// if (logLevel.equals("FINEST")){
-		// log.setLevel(Level.FINEST);
-		// } else {
-		// log.setLevel(Level.WARNING);
-		// }
-		//			
-		// log.fine("Logger configured");
-		// } catch (SecurityException e) {
-		// log.log(Level.WARNING, "Error during configuration", e);
-		// System.exit(-1);
-		// } catch (IOException e) {
-		// log.log(Level.WARNING, "Error during configuration", e);
-		// System.exit(-1);
-		// }
+		
+		String logConfFile = conf.getValue("LOG_CONF_FILE");
+		if (new File(logConfFile).exists())
+			PropertyConfigurator.configure(logConfFile);
+		log.info("Logger configured");		
 	}
 
 	/**
@@ -107,9 +80,7 @@ public class OSSMain {
 
 		boolean init = true;
 
-		OSSMain.configureLogger();
-
-		log.info("OpenSign Server started");
+		OSSMain.configureLogger();		
 
 		Security.addProvider(new BouncyCastleProvider());
 		Crypto crypto = Crypto.getInstance();
@@ -120,13 +91,13 @@ public class OSSMain {
 			if (init) {
 				OSSKeyStore.getInstance().create();
 			}
-			openSignServer.start();
+			openSignServer.start();			
 			System.out.println("Press enter to quit server");
 			new BufferedReader(new InputStreamReader(System.in)).readLine();
 			openSignServer.stop();
 
 		} catch (Exception e) {
-			// log.log(Level.WARNING, "Server error", e);
+			log.error("OpenSign server terminated in an unexpected manner");
 		}
 
 	}

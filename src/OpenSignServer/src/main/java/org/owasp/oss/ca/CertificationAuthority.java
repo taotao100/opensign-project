@@ -8,11 +8,9 @@ import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Vector;
 
-import org.bouncycastle.asn1.DERObjectIdentifier;
+import org.apache.log4j.Logger;
 import org.bouncycastle.asn1.x509.X509Name;
-import org.bouncycastle.jce.X509Principal;
 import org.bouncycastle.util.encoders.Base64;
 import org.bouncycastle.x509.X509V3CertificateGenerator;
 import org.owasp.oss.crypto.OSSKeyStore;
@@ -23,9 +21,14 @@ import sun.security.pkcs.PKCS10;
  * This class is responsible for Certification Authority (CA) related actions.
  */
 public class CertificationAuthority {
+	
+	private static Logger log = Logger.getLogger(CertificationAuthority.class);
+	
+	private static final int PEM_BREAK = 78;
 
 	public Certificate processCsr(InputStream csrStream)
-			throws CertificationAuthorityException {
+			throws CertificationAuthorityException {				
+		
 		try {
 			byte[] csrBytes = new byte[csrStream.available()];
 			csrStream.read(csrBytes);
@@ -35,14 +38,15 @@ public class CertificationAuthority {
 					.replaceFirst("-----END NEW CERTIFICATE REQUEST-----", "");
 			byte[] crsDer = Base64.decode(csrStr);
 
-			FileOutputStream f = new FileOutputStream("csr.der");
-			f.write(crsDer);
-			f.close();
+			//FileOutputStream f = new FileOutputStream("csr.der");
+			//f.write(crsDer);
+			//f.close();
 
 			PKCS10 p = new PKCS10(crsDer);
-			System.out.println(p.toString());
 		
-
+			log.info("CSR received:");
+			log.info(p);
+			
 			String subjectDN = p.getSubjectName().toString();
 			X509Name subject = new X509Name(subjectDN);
 
@@ -116,6 +120,23 @@ public class CertificationAuthority {
 			throw new CertificationAuthorityException(e);
 		}
 
+	}
+	
+	public byte[] certificateToPEM(Certificate cert) throws CertificationAuthorityException {
+		try {
+		StringBuffer respBody = new StringBuffer(new String(Base64.encode(cert.getEncoded())));
+		
+		for (int breakInsert = PEM_BREAK - 2; respBody.length() > breakInsert; breakInsert += PEM_BREAK)
+			respBody.insert(breakInsert, "\r\n");
+		
+		respBody.insert(0, "-----BEGIN CERTIFICATE-----\r\n");
+		respBody.append("\r\n-----END CERTIFICATE-----");
+		
+		return respBody.toString().getBytes();
+		
+	} catch (Exception e) {
+		throw new CertificationAuthorityException(e);
+	}		
 	}
 
 }

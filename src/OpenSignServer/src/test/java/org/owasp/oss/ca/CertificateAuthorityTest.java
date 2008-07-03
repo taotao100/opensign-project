@@ -66,7 +66,7 @@ public class CertificateAuthorityTest extends TestBase {
 		CertificationAuthority ca = new CertificationAuthority();
 		Certificate cert = ca.processCsr(csrStream);
 		assertNotNull(cert);
-		writeFile("cert1.cer", cert.getEncoded());
+		//writeFile("cert1.cer", cert.getEncoded());
 	}
 	
 }

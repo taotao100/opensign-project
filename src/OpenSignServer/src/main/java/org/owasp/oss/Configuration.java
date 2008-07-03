@@ -5,15 +5,18 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Properties;
 
-public class ConfigurationManager {
+/**
+ * This class reads the configuration file and provides the read values to the system. 
+ */
+public class Configuration {
 
 	private static String CONFIGURATION_FILE_NAME = "config.properties";
 	
-	private static ConfigurationManager _instance = null;
+	private static Configuration _instance = null;
 	
 	static {
 		try {
-			_instance = new ConfigurationManager();
+			_instance = new Configuration();
 		} catch (FileNotFoundException e) {			
 			e.printStackTrace();
 			System.exit(-1);
@@ -25,12 +28,12 @@ public class ConfigurationManager {
 
 	private Properties _properties = null;
 
-	private ConfigurationManager() throws FileNotFoundException, IOException {
+	private Configuration() throws FileNotFoundException, IOException {
 		_properties = new Properties();
 		_properties.load(new FileInputStream(CONFIGURATION_FILE_NAME));
 	}
 
-	public static ConfigurationManager getInstance() throws IOException {
+	public static Configuration getInstance() {
 		return _instance;
 	}
 
