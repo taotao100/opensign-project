@@ -1,5 +1,4 @@
 
-
 *) CREATION
 
    mvn compile
@@ -15,16 +14,30 @@
   mvn package   
   
 
-*) EXECUTING PACKAGE
+*) EXECUTING THE PROJECT
+
+	 ==ECLIPSE==
+	 
+	 1.) Generate porject:
+	 
+	 		 mvn eclipse:eclipse 
+	 		 
+	 2.) Import project into eclipse
    
-   Once project is inegrated in eclipse, execute class OSSMain.
+   3.) Executing:
+       - To start the server execute class OSSMain
+       - To run the JUNIT test classes execute class TestAll
    
-   TODO: create mavnen target
+   ==PACKAGE==
    
-   Not working any more due to dependencies:
-   Place BouncyCasle (bcprov-jdk16-136.jar) in the same directory as the server and execute:
-   java -jar OpenSignServer-1.0-SNAPSHOT.jar   
+   1.) Unpack tar.gz archiev
    
+   2.) Exectuing:
+       - Run command: java -jar OpenSignServer-1.0-SNAPSHOT.jar
+   
+*) GENERATING THE tar.gz archieve
+
+   mvn assebmly:assembly
 
 *) NOTES
    
