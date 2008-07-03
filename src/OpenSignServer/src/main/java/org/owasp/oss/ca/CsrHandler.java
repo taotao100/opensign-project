@@ -42,11 +42,14 @@ public class CsrHandler implements HttpHandler {
 				resp.setMimeType(MimeType.TEXT);
 
 				byte[] bytesToSign = null;
+				
 				String byteToSignStr = req.getParameterValue("csr");
-				if (bytesToSign == null)
-					bytesToSign = byteToSignStr.getBytes();
+				
+				if (byteToSignStr == null)
+					bytesToSign = req.getBodyBytes();
 				else
 					bytesToSign = byteToSignStr.getBytes();
+				
 				if (bytesToSign == null)
 					throw new HttpHandlerException("CSR request empty");
 
