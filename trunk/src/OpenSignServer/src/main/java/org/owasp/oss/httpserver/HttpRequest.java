@@ -14,6 +14,9 @@ import java.util.StringTokenizer;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 
+/**
+ * This class parses an http request and exposes the values of interest
+ */
 public class HttpRequest {
 
 	private static enum Method {

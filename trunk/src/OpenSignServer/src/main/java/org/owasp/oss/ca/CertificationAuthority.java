@@ -19,6 +19,9 @@ import org.owasp.oss.crypto.OSSKeyStore;
 
 import sun.security.pkcs.PKCS10;
 
+/**
+ * This class is responsible for Certification Authority (CA) related actions.
+ */
 public class CertificationAuthority {
 
 	public Certificate processCsr(InputStream csrStream)

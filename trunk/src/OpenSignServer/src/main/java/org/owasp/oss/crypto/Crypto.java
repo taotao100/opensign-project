@@ -9,7 +9,9 @@ import java.security.Signature;
 import java.security.SignatureException;
 
 
-
+/**
+ * Class providing cryptographic opperations
+ */
 public class Crypto {
 	
 	private KeyPair _keyPair = null;

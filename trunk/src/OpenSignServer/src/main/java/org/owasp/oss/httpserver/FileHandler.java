@@ -17,6 +17,9 @@ import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
+/**
+ * The FileHandler class processes requests for static html files
+ */
 public class FileHandler implements HttpHandler {
 
 	private static final String STATIC_FILES_PATH = "www";

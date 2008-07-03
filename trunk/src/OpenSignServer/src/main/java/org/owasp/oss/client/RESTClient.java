@@ -8,6 +8,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Arrays;
 
+/**
+ * Class providing functionality to communicate with a RESTful server architecture
+ */
 public class RESTClient {
 
 	/**

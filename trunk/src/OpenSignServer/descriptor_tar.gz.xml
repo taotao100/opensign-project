@@ -9,6 +9,7 @@
         <include>readme.txt</include>
         <include>config.properties</include>
         <include>resources/</include>
+        <include>www/</include>
       </includes>
     </fileSet>
     <fileSet>
