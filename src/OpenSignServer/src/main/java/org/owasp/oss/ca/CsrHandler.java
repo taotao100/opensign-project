@@ -15,6 +15,9 @@ import org.owasp.oss.utils.Utils;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
+/**
+ * This class handles Certificate Signing Requests. 
+ */
 public class CsrHandler implements HttpHandler {
 
 	private static final String STATIC_FILES_PATH = "www";

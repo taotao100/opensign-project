@@ -1,21 +1,14 @@
 package org.owasp.oss;
 
 import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.security.Provider;
 import java.security.Security;
 import java.util.Enumeration;
 import java.util.Iterator;
-import java.util.Properties;
 import java.util.Set;
 import java.util.logging.FileHandler;
-import java.util.logging.Handler;
-import java.util.logging.Level;
-import java.util.logging.LogManager;
-import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
@@ -23,25 +16,54 @@ import org.owasp.oss.crypto.Crypto;
 import org.owasp.oss.crypto.OSSKeyStore;
 import org.owasp.oss.httpserver.OSSHttpServer;
 
-public class OSSMain {
-	private static Logger log = Logger.getLogger("org.owasp.oss");
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
 
+/**
+ * OpenSign Server main class
+ */
+public class OSSMain {
+	private static Logger log = Logger.getLogger(OSSMain.class);
+	private static Configuration conf = null;
+
+	/**
+	 * This method sets up the logger
+	 */
 	static public void configureLogger() {
-		try {
-			Handler fh = new FileHandler(ConfigurationManager.getInstance().getValue("LOG_FILE"));
-			fh.setFormatter(new SimpleFormatter());
-			log.addHandler(fh);
-			log.setLevel(Level.FINEST);
-			log.fine("Logger configured");
-		} catch (SecurityException e) {
-			log.log(Level.WARNING, "Error during configuration", e);
-			System.exit(-1);
-		} catch (IOException e) {
-			log.log(Level.WARNING, "Error during configuration", e);
-			System.exit(-1);
-		} 
+
+		//BasicConfigurator.configure();
+		PropertyConfigurator.configure("log4j.properties");
+		log.info("config logger");
+		log.debug("ASDF");
+		log.error("ASDFASDF");
+		// try {
+		// conf = Configuration.getInstance();
+		// FileHandler fh = new
+		// FileHandler(Configuration.getInstance().getValue("LOG_FILE"));
+		// fh.setFormatter(new SimpleFormatter());
+		// log.addHandler(fh);
+		//			
+		// String logLevel = conf.getValue("LOG_LEVEL");
+		// if (logLevel.equals("FINEST")){
+		// log.setLevel(Level.FINEST);
+		// } else {
+		// log.setLevel(Level.WARNING);
+		// }
+		//			
+		// log.fine("Logger configured");
+		// } catch (SecurityException e) {
+		// log.log(Level.WARNING, "Error during configuration", e);
+		// System.exit(-1);
+		// } catch (IOException e) {
+		// log.log(Level.WARNING, "Error during configuration", e);
+		// System.exit(-1);
+		// }
 	}
 
+	/**
+	 * Debug method, which prints system properties to the console
+	 */
 	public void printSystemInformation() {
 		System.out
 				.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
@@ -50,10 +72,10 @@ public class OSSMain {
 		System.out
 				.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
 
-		LogManager log = LogManager.getLogManager();
-		Enumeration<String> en = log.getLoggerNames();
-		while (en.hasMoreElements())
-			System.out.println(en.nextElement());
+		// LogManager log = LogManager.getLogManager();
+		// Enumeration<String> en = log.getLoggerNames();
+		// while (en.hasMoreElements())
+		// System.out.println(en.nextElement());
 
 		System.out
 				.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
@@ -92,7 +114,6 @@ public class OSSMain {
 		Security.addProvider(new BouncyCastleProvider());
 		Crypto crypto = Crypto.getInstance();
 
-
 		OSSHttpServer openSignServer = OSSHttpServer.getInstance();
 
 		try {
@@ -105,7 +126,7 @@ public class OSSMain {
 			openSignServer.stop();
 
 		} catch (Exception e) {
-			log.log(Level.WARNING, "Server error", e);
+			// log.log(Level.WARNING, "Server error", e);
 		}
 
 	}

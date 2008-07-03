@@ -11,6 +11,9 @@ import java.util.Set;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 
+/**
+ * This class is used to build and send the http-response
+ */
 public class HttpResponse {
 
 	protected HttpExchange _exchange;

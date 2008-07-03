@@ -13,14 +13,16 @@ import java.util.Enumeration;
 
 import org.owasp.oss.ca.CertificationAuthority;
 
+/**
+ * This class manages a key store file.
+ */
 public class OSSKeyStore {
 
 	private static OSSKeyStore _instance = null;
 
-	private static final String KEYSTORE_NAME = "resources/live/oss_keystore.p12";
+	private static final String KEYSTORE_NAME = "resources/live/oss_keystore.bks";
 
 	private static final String KEYSTORE_PASSWD = "pass";
-	//private static final String KEYSTORE_PASSWD = "storepasswd";
 
 	private KeyStore _keyStore = null;
 
@@ -107,7 +109,6 @@ public class OSSKeyStore {
 			KeyPair pair = Crypto.generateKeyPair();
 			_keyStore.load(null, null);
 		
-			//TODO: Generate propper values
 			Certificate[] certChain = new Certificate[1];
 			CertificationAuthority ca = new CertificationAuthority();
 			certChain[0] = ca.makeCertificate(pair.getPrivate(), pair.getPublic());

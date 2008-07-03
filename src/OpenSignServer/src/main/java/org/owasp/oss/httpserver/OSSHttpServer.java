@@ -2,13 +2,18 @@ package org.owasp.oss.httpserver;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.util.logging.Logger;
 
 import org.owasp.oss.ca.CsrHandler;
 
 import com.sun.net.httpserver.HttpContext;
 import com.sun.net.httpserver.HttpServer;
 
+/**
+ * OpenSign http-server
+ */
 public class OSSHttpServer {
+	//private static Logger _log = Logger.getLogger(OSSHttpServer.class);
 
 	private static final int SERVER_PORT = 8080;
 
@@ -29,6 +34,7 @@ public class OSSHttpServer {
 	public void start() throws IOException {
 		_httpServer = HttpServer.create(new InetSocketAddress(SERVER_PORT),
 				MAX_CONNECTIONS);
+		
 		HttpContext httpContext = null;
 		httpContext = _httpServer.createContext("/login", new LoginHandler());
 		httpContext.setAuthenticator(new BasicAuthenticatorImpl("welcome"));
