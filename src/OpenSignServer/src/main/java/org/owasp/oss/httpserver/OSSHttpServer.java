@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 
 import org.apache.log4j.Logger;
+import org.owasp.oss.Configuration;
 import org.owasp.oss.ca.CsrHandler;
 
 import com.sun.net.httpserver.HttpContext;
@@ -15,7 +16,7 @@ import com.sun.net.httpserver.HttpServer;
 public class OSSHttpServer {
 	private static Logger log = Logger.getLogger(OSSHttpServer.class);
 
-	private static final int SERVER_PORT = 8080;
+	private static final String DEFAULT_SERVER_PORT = "8080";
 
 	private static final int MAX_CONNECTIONS = 10;
 
@@ -32,10 +33,17 @@ public class OSSHttpServer {
 	}
 
 	public void start() throws IOException {
-		_httpServer = HttpServer.create(new InetSocketAddress(SERVER_PORT),
+		
+		String serverPort = Configuration.getInstance().getValue("OSS_PORT");
+		if (serverPort == null)
+			serverPort = DEFAULT_SERVER_PORT;
+		
+		int port = Integer.parseInt(serverPort);
+		
+		_httpServer = HttpServer.create(new InetSocketAddress(port),
 				MAX_CONNECTIONS);
 		
-		log.info("OpenSign Server started on port: " + SERVER_PORT);
+		log.info("OpenSign Server started on port: " + serverPort);
 		
 		HttpContext httpContext = null;
 		
