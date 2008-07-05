@@ -1,48 +1,31 @@
+*******************************************************************************
+*                      OPEN SIGN SERVER - VERSION 0.1                         *
+*******************************************************************************
 
-*) CREATION
+== Prerequisites ==
 
-   mvn compile
-   
-   
-*) TESTING
+*) Install Java runtime 1.6
 
-   mvn test   
-  
-   
-*) GENERATING PACKAGE
 
-  mvn package   
-  
+== Configuration ==
 
-*) EXECUTING THE PROJECT
+*) Configuration file: config.properties
 
-	 ==ECLIPSE==
-	 
-	 1.) Generate porject:
-	 
-	 		 mvn eclipse:eclipse 
-	 		 
-	 2.) Import project into eclipse
-   
-   3.) Executing:
-       - To start the server execute class OSSMain
-       - To run the JUNIT test classes execute class TestAll
-   
-   ==PACKAGE==
-   
-   1.) Unpack tar.gz archiev
-   
-   2.) Exectuing:
-       - Run command: java -jar OpenSignServer-1.0-SNAPSHOT.jar
-   
-*) GENERATING THE tar.gz archieve
+*) Configuration of log method in file: log4j.properties
+ 
 
-   mvn assebmly:assembly
+== Starting the Server ==
 
-*) NOTES
-   
-   Creation of project structure:
-   
-   mvn archetype:create -DarchetypeGroupId=org.apache.maven.archetypes -DgroupId=org.owasp.oss -DartifactId=OpenSignServer
-   
-   mvn -Declipse.workspace=D:\projects\owasp\repository\src
+*) Windows: Click on run.bat
+
+*) Linux: java -jar jar\OpenSignServer-0.1.jar
+
+Server starts at: http://localhost:8080 ,whereas the port is configurable
+
+
+== Supported Features ==
+
+*) Access of root certificate via HTTP-GET http://localhost:8080/ca
+
+*) Certificate issuing via sending a Certificate Signing Request (PEM-formatted
+   PKCS#10 structure) via HTTP-POST to http://localhost:8080/ca/csr
