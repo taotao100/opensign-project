@@ -20,14 +20,9 @@ import com.sun.net.httpserver.HttpHandler;
 /**
  * This class handles Certificate Signing Requests. 
  */
-public class CsrHandler implements HttpHandler {
+public class CaHandler implements HttpHandler {
 	
-	private static Logger log = Logger.getLogger(CsrHandler.class);
-
-	private static final String STATIC_FILES_PATH = "www";
-
-	private static final String DEFAULT_FILE = "index.html";
-	
+	private static Logger log = Logger.getLogger(CaHandler.class);
 
 	public void handle(HttpExchange exchange) throws IOException {
 
@@ -38,26 +33,16 @@ public class CsrHandler implements HttpHandler {
 			HttpRequest req = HttpRequest.create(exchange);
 			HttpResponse resp = HttpResponse.create(exchange);
 
-			if (req.isPOST()) {
-
-				byte[] bytesToSign = null;
-				
-				String byteToSignStr = req.getParameterValue("csr");
-				
-				if (byteToSignStr == null)
-					bytesToSign = req.getBodyBytes();
-				else
-					bytesToSign = byteToSignStr.getBytes();
-				
-				if (bytesToSign == null)
-					throw new HttpHandlerException("CSR request empty");
-
+			if (req.isGET()) {
 				CertificationAuthority ca = new CertificationAuthority();
-				Certificate cert = ca.processCsr(new ByteArrayInputStream(
-						bytesToSign));
-				
-				resp.send(new ByteArrayInputStream(ca.certificateToPEM(cert)), MimeType.TEXT);
+				Certificate caCert = ca.getCertificate();
+				resp.send(new ByteArrayInputStream(ca.certificateToPEM(caCert)), MimeType.TEXT);
+			}
+			else if (req.isPOST()) {
+				log.error("CA does not support POST requests");
+				HttpResponse.sendErrorPage(ErrorType.FORBIDDEN, exchange);
 			} else {			
+				log.error("HTTP method not known");
 				HttpResponse.sendErrorPage(ErrorType.FORBIDDEN, exchange);
 			}
 			

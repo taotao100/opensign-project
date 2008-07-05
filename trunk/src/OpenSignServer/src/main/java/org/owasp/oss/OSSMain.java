@@ -88,9 +88,6 @@ public class OSSMain {
 		OSSHttpServer openSignServer = OSSHttpServer.getInstance();
 
 		try {
-			if (init) {
-				OSSKeyStore.getInstance().create();
-			}
 			openSignServer.start();			
 			System.out.println("Press enter to quit server");
 			new BufferedReader(new InputStreamReader(System.in)).readLine();

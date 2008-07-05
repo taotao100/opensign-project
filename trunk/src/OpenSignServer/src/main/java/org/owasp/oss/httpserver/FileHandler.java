@@ -27,7 +27,7 @@ public class FileHandler implements HttpHandler {
 
 	private static final String STATIC_FILES_PATH = "www";
 
-	private static final String DEFAULT_FILE = "index.html";
+	private static final String DEFAULT_FILE = "/index.html";
 
 	public void handle(HttpExchange exchange) throws IOException {
 		
@@ -43,7 +43,7 @@ public class FileHandler implements HttpHandler {
 				String filePath = null;
 
 				if (req.isPathEmpty())
-					filePath = STATIC_FILES_PATH + req.getPath() + DEFAULT_FILE;
+					filePath = STATIC_FILES_PATH + DEFAULT_FILE;
 				else
 					filePath = STATIC_FILES_PATH + req.getPath();
 
@@ -53,12 +53,12 @@ public class FileHandler implements HttpHandler {
 
 					FileInputStream fis = new FileInputStream(file);
 
-					if (req.getPath().indexOf(".css") > 0)
-						resp.setMimeType(MimeType.CSS);
-					if (req.getPath().indexOf(".html") > 0)
-						resp.setMimeType(MimeType.HTML);
-
-					resp.send(fis);
+					if (filePath.indexOf(".css") > 0)
+						resp.send(fis, MimeType.CSS);
+					else if (filePath.indexOf(".html") > 0)
+						resp.send(fis, MimeType.HTML);
+					else
+						resp.sendErrorPage(ErrorType.FORBIDDEN, exchange);
 
 					return;
 				}

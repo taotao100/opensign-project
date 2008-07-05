@@ -5,6 +5,7 @@ import java.net.InetSocketAddress;
 
 import org.apache.log4j.Logger;
 import org.owasp.oss.Configuration;
+import org.owasp.oss.ca.CaHandler;
 import org.owasp.oss.ca.CsrHandler;
 
 import com.sun.net.httpserver.HttpContext;
@@ -54,8 +55,11 @@ public class OSSHttpServer {
 		log.info("Resource added: /login");
 		httpContext.setAuthenticator(new BasicAuthenticatorImpl("welcome"));
 		
+		httpContext = _httpServer.createContext("/ca", new CaHandler());
+		log.info("Resource added: /ca");			
+		
 		httpContext = _httpServer.createContext("/ca/csr", new CsrHandler());
-		log.info("Resource added: /ca/csr");				
+		log.info("Resource added: /ca/csr");			
 		
 		_httpServer.setExecutor(null);
 		_httpServer.start();

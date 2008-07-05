@@ -96,7 +96,7 @@ public class HttpResponse {
 		_exchange = exchange;
 	}
 
-	public void setMimeType(MimeType type) {
+	private void setMimeType(MimeType type) {
 		if (type == MimeType.HTML)
 			_headers.add("Content-Type", "text/html");
 		else if (type == MimeType.CSS)
@@ -105,7 +105,8 @@ public class HttpResponse {
 			_headers.add("Content-Type", "text/plain");
 	}
 
-	public void send(InputStream body) throws IOException {
+	public void send(InputStream body, MimeType type) throws IOException {
+		setMimeType(type);
 
 		long bodyLength = body.available();
 		_exchange.sendResponseHeaders(_status, bodyLength);

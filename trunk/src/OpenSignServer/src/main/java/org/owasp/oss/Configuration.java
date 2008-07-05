@@ -40,5 +40,9 @@ public class Configuration {
 	public String getValue(String key) {
 		return _properties.getProperty(key);
 	}
+	
+	private void reload(String fileName) throws FileNotFoundException, IOException {		
+		_properties.load(new FileInputStream(fileName));
+	}
 
 }

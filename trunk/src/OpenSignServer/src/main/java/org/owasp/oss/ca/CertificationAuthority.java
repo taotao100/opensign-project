@@ -2,6 +2,7 @@ package org.owasp.oss.ca;
 
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.security.KeyPair;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.cert.Certificate;
@@ -13,6 +14,9 @@ import org.apache.log4j.Logger;
 import org.bouncycastle.asn1.x509.X509Name;
 import org.bouncycastle.util.encoders.Base64;
 import org.bouncycastle.x509.X509V3CertificateGenerator;
+import org.owasp.oss.Configuration;
+import org.owasp.oss.crypto.Crypto;
+import org.owasp.oss.crypto.CryptoException;
 import org.owasp.oss.crypto.OSSKeyStore;
 
 import sun.security.pkcs.PKCS10;
@@ -21,14 +25,52 @@ import sun.security.pkcs.PKCS10;
  * This class is responsible for Certification Authority (CA) related actions.
  */
 public class CertificationAuthority {
-	
+
 	private static Logger log = Logger.getLogger(CertificationAuthority.class);
-	
+
+	private static final String DEFAULT_KEY_STORE_FILE = "oss_keystore.jceks";
+
+	private static final String KEY_STORE_PASSWD = "password";
+
+	private static final String ROOT_KEY_NAME = "root";
+
+	private OSSKeyStore _keyStore = null;
+
+	private String _keyStoreFile = null;
+
 	private static final int PEM_BREAK = 78;
 
+	public CertificationAuthority() throws CertificationAuthorityException {
+		setUpKeyStore();
+	}
+
+	private void setUpKeyStore() throws CertificationAuthorityException {
+		try {
+			_keyStoreFile = Configuration.getInstance().getValue(
+					"CA_KEY_STORE_PATH")
+					+ Configuration.getInstance().getValue("CA_KEY_STORE_NAME");
+
+			if (_keyStoreFile == null || _keyStoreFile.length() < 1)
+				_keyStoreFile = DEFAULT_KEY_STORE_FILE;
+
+			_keyStore = new OSSKeyStore(_keyStoreFile, KEY_STORE_PASSWD);
+			if (!_keyStore.containsAlias(ROOT_KEY_NAME)) {
+				KeyPair pair = Crypto.generateKeyPair();
+				Certificate[] certChain = new Certificate[1];
+				certChain[0] = makeCertificate(pair.getPrivate(), pair
+						.getPublic());
+				_keyStore.setKeyEntry(ROOT_KEY_NAME, pair.getPrivate(),
+						certChain);
+				_keyStore.store();
+			}
+		} catch (CryptoException e) {
+			throw new CertificationAuthorityException(e);
+		}
+	}
+
 	public Certificate processCsr(InputStream csrStream)
-			throws CertificationAuthorityException {				
-		
+			throws CertificationAuthorityException {
+
 		try {
 			byte[] csrBytes = new byte[csrStream.available()];
 			csrStream.read(csrBytes);
@@ -38,20 +80,20 @@ public class CertificationAuthority {
 					.replaceFirst("-----END NEW CERTIFICATE REQUEST-----", "");
 			byte[] crsDer = Base64.decode(csrStr);
 
-			//FileOutputStream f = new FileOutputStream("csr.der");
-			//f.write(crsDer);
-			//f.close();
+			// FileOutputStream f = new FileOutputStream("csr.der");
+			// f.write(crsDer);
+			// f.close();
 
 			PKCS10 p = new PKCS10(crsDer);
-		
+
 			log.info("CSR received:");
 			log.info(p);
-			
+
 			String subjectDN = p.getSubjectName().toString();
 			X509Name subject = new X509Name(subjectDN);
 
-			return makeCertificate(OSSKeyStore.getInstance().getPrivateKey(
-					"signkey1"), p.getSubjectPublicKeyInfo(), subject);
+			return makeCertificate(_keyStore.getPrivateKey(ROOT_KEY_NAME), p
+					.getSubjectPublicKeyInfo(), subject);
 
 		} catch (Exception e) {
 			throw new CertificationAuthorityException(e);
@@ -119,24 +161,37 @@ public class CertificationAuthority {
 		} catch (Exception e) {
 			throw new CertificationAuthorityException(e);
 		}
-
 	}
-	
-	public byte[] certificateToPEM(Certificate cert) throws CertificationAuthorityException {
+
+	public byte[] certificateToPEM(Certificate cert)
+			throws CertificationAuthorityException {
 		try {
-		StringBuffer respBody = new StringBuffer(new String(Base64.encode(cert.getEncoded())));
-		
-		for (int breakInsert = PEM_BREAK - 2; respBody.length() > breakInsert; breakInsert += PEM_BREAK)
-			respBody.insert(breakInsert, "\r\n");
-		
-		respBody.insert(0, "-----BEGIN CERTIFICATE-----\r\n");
-		respBody.append("\r\n-----END CERTIFICATE-----");
-		
-		return respBody.toString().getBytes();
-		
-	} catch (Exception e) {
-		throw new CertificationAuthorityException(e);
-	}		
+			StringBuffer respBody = new StringBuffer(new String(Base64
+					.encode(cert.getEncoded())));
+
+			for (int breakInsert = PEM_BREAK - 2; respBody.length() > breakInsert; breakInsert += PEM_BREAK)
+				respBody.insert(breakInsert, "\r\n");
+
+			respBody.insert(0, "-----BEGIN CERTIFICATE-----\r\n");
+			respBody.append("\r\n-----END CERTIFICATE-----");
+
+			return respBody.toString().getBytes();
+
+		} catch (Exception e) {
+			throw new CertificationAuthorityException(e);
+		}
 	}
 
+	public String getKeyStoreFile() {
+		return _keyStoreFile;
+	}
+
+	public Certificate getCertificate() throws CertificationAuthorityException {
+		try {
+			return _keyStore.getCertificate(ROOT_KEY_NAME);
+		} catch (Exception e) {
+			log.error("No root key defined", e);
+			throw new CertificationAuthorityException("No root key defined");
+		}
+	}
 }
