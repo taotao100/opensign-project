@@ -1,5 +1,5 @@
 <html>
-	<head>
+    <head>
 		<link type="text/css" href="style.css" rel="stylesheet" media="screen" />
 		<title>Open Sign Server</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -12,6 +12,7 @@
 	 			<span id="menu_link">link1</span> 
 	 			<span id="menu_link">link2</span>
 	 			<span id="menu_link"><a href="login">login</a></span>
+	 		</h1>
 		</div>	
 		<div id="left">
 			<h2>menu left</h2>
@@ -20,12 +21,15 @@
 			<h2>menu right</h2>
 		</div>
 		<div id="content">
-			<h2>content</h2>
-			<p><b>Welcome to the OpenSign server project!</b></p>
+			<h2>Welcome to the OpenSign server project!</h2>
 			<br />
-				<form name="input" action="ca/csr" method="post">
-				    Enter your certification request here: <br />
-					<textarea cols="50" rows="15" name="csr">
+			<br />
+			<p>Get the CA root certificate here: <a href="ca"> Click </a></p>
+			<br />
+			<br />
+			<form name="input" action="ca/csr" method="post">
+		    <p>Enter your certification request here:</p>
+				<textarea cols="50" rows="15" name="csr">
 -----BEGIN NEW CERTIFICATE REQUEST-----
 MIIBmDCCAQECAQAwWDELMAkGA1UEBhMCQVQxDTALBgNVBAgTBHRlc3QxDTALBgNVBAcTBHRlc3Qx
 DTALBgNVBAoTBHRlc3QxDTALBgNVBAsTBHRlc3QxDTALBgNVBAMTBHRlc3QwgZ8wDQYJKoZIhvcN
@@ -36,12 +40,13 @@ lEpPZih/q9FprzynHxW7S6XYgCJHuGnsJBHDeY83AgMBAAGgADANBgkqhkiG9w0BAQUFAAOBgQAP
 1VVRJxICQo3qBRkqZadeJSCW+oNcz2jFqDk2KNECzErhpt1WuOglw1JT6e2ieb0f6dWSg8jdo0zy
 5dV9A3sN3wILUvmPrw==
 -----END NEW CERTIFICATE REQUEST-----
-                    </textarea><br />
-					<input type="submit" value="go">
-				</form>
-						</div>
-	 	<div id="footer">
+             	</textarea>
+             	<br />
+				<input type="submit" value="go">
+			 </form>
+		  </div>
+	 	  <div id="footer">
 	 		<h1>&copy 2008 Richard, Phil</h1></div>
-		</div>
-	</body>
+		  </div>
+	  </body>
 </html>
