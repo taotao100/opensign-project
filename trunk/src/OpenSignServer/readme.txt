@@ -1,31 +1,37 @@
 *******************************************************************************
-*                      OPEN SIGN SERVER - VERSION 0.1                         *
+*                   OPEN SIGN SERVER - STARTING SERVER                        *
 *******************************************************************************
+
+This file describes how the server is configured and fired up. Furthermore, a 
+brief overview of functions is given.
+
 
 == Prerequisites ==
 
-*) Install Java runtime 1.6
+	o Install Java runtime 1.6
+
+	o Download and unpack OpenSignServer-XX.tar.gz package
 
 
 == Configuration ==
 
-*) Configuration file: config.properties
+	o Configuration file: config.properties
 
-*) Configuration of log method in file: log4j.properties
+	o Configuration of log method in file: log4j.properties
  
 
 == Starting the Server ==
 
-*) Windows: Click on run.bat
+	o Windows: Click on run.bat
 
-*) Linux: java -jar jar\OpenSignServer-0.1.jar
+	o Linux: java -jar jar\OpenSignServer-0.1.jar
 
-Server starts at: http://localhost:8080 ,whereas the port is configurable
+	Server starts at: http://localhost:8080 ,whereas the port is configurable
 
 
 == Supported Features ==
 
-*) Access of root certificate via HTTP-GET http://localhost:8080/ca
+	o Access of root certificate via HTTP-GET http://localhost:8080/ca
 
-*) Certificate issuing via sending a Certificate Signing Request (PEM-formatted
-   PKCS#10 structure) via HTTP-POST to http://localhost:8080/ca/csr
+	o Certificate issuing via sending a Certificate Signing Request (PEM-formatted
+      PKCS#10 structure) via HTTP-POST to http://localhost:8080/ca/csr
