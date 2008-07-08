@@ -1,7 +1,7 @@
 #This pages contains the road map of this project suite
 
 =Opensign Server=
-The goal of the OpenSign Server (OSS) is to serve as trusted third party in order to prove the integrity and authenticity of binaries. To meet this goal following roadmap will be implemented:
+The goal of the Opensign Server (OSS) is to serve as trusted third party in order to prove the integrity and authenticity of binaries. To meet this goal following roadmap will be implemented:
 
 ==Version 0.1==
 
