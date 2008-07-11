@@ -135,6 +135,15 @@ public class OSSKeyStore {
 		}
 	}
 
+	public void setCertificateEntry(String alias, Certificate cert)
+			throws CryptoException {
+		try {
+			_keyStore.setCertificateEntry(alias, cert);
+		} catch (Exception e) {
+			throw new CryptoException(e);
+		}
+	}
+
 	public void store() throws CryptoException {
 		try {
 			FileOutputStream os = new FileOutputStream(_name);

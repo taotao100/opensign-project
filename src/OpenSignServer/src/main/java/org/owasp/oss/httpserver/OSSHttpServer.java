@@ -2,11 +2,15 @@ package org.owasp.oss.httpserver;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.util.Iterator;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.owasp.oss.Configuration;
 import org.owasp.oss.ca.CaHandler;
 import org.owasp.oss.ca.CsrHandler;
+import org.owasp.oss.ca.User;
+import org.owasp.oss.ca.UserManager;
 
 import com.sun.net.httpserver.HttpContext;
 import com.sun.net.httpserver.HttpServer;
@@ -52,14 +56,32 @@ public class OSSHttpServer {
 		log.info("Resource added: /");		
 		
 		httpContext = _httpServer.createContext("/login", new LoginHandler());
-		log.info("Resource added: /login");
-		httpContext.setAuthenticator(new BasicAuthenticatorImpl("welcome"));
+		log.info("Resource added: /login");		
+		//httpContext.setAuthenticator(new BasicAuthenticatorImpl("welcome"));	
+		httpContext.setAuthenticator(new OSSAuthenticator());
+		
+		httpContext = _httpServer.createContext("/logout", new LogoutHandler());
+		log.info("Resource added: /logout");			
 		
 		httpContext = _httpServer.createContext("/ca", new CaHandler());
 		log.info("Resource added: /ca");			
 		
 		httpContext = _httpServer.createContext("/ca/csr", new CsrHandler());
-		log.info("Resource added: /ca/csr");			
+		log.info("Resource added: /ca/csr");	
+		
+		httpContext = _httpServer.createContext("/debug", new DebugHandler());
+		log.info("Resource added: /debug");		
+		
+		// add user-resources
+		
+		List<User> ul = UserManager.getInstance().getAllUsers();
+		Iterator<User> i = ul.iterator();
+		User u = null;
+		while (i.hasNext()) {
+			u = i.next();
+			_httpServer.createContext("/" + u.getUserName(), new UserHandler());	
+			log.info("Resource added: /" + u.getUserName());
+		}		
 		
 		_httpServer.setExecutor(null);
 		_httpServer.start();

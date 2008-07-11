@@ -25,7 +25,7 @@ public class CertificateAuthorityTest extends TestBase {
 	}
 	
 	public void testCreateKeyStore() throws Exception {		
-		CertificationAuthority ca = new CertificationAuthority();
+		CertificationAuthority ca = CertificationAuthority.getInstance();
 		File storeFile = new File(ca.getKeyStoreFile());
 		assertTrue(storeFile.exists());
 		storeFile.delete();
@@ -33,8 +33,8 @@ public class CertificateAuthorityTest extends TestBase {
 	
 	public void testProcessCsr() throws Exception {
 		InputStream csrStream = loadFile(TEST_CSR);
-		CertificationAuthority ca = new CertificationAuthority();
-		Certificate cert = ca.processCsr(csrStream);
+		CertificationAuthority ca = CertificationAuthority.getInstance();
+		Certificate cert = ca.processCsr(csrStream, "test");
 		assertNotNull(cert);
 		//writeFile("cert1.cer", cert.getEncoded());
 	}

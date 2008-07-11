@@ -57,6 +57,11 @@ font-size: 40px;
 	margin-left: 20px;
 	margin-right: 20px;
 }
+#menu_input{
+	margin-left: 0px;
+	margin-right: 0px;
+	border:1px solid grey;
+}
 
 /* -----------------Inhalt--------------------- */
 #content {

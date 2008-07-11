@@ -15,12 +15,13 @@ import org.apache.log4j.Logger;
 
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpPrincipal;
 
 /**
  * This class parses an http request and exposes the values of interest
  */
 public class HttpRequest {
-	
+
 	private static Logger log = Logger.getLogger(HttpRequest.class);
 
 	private static enum Method {
@@ -30,16 +31,20 @@ public class HttpRequest {
 	private Method _method = null;
 
 	private String _path = null;
-	
+
 	private byte[] _bodyBytes = null;
-	
+
 	Map<String, String> _parameters = null;
 
-	private HttpRequest(Method method, String path, byte[] bodyBytes, Map<String, String> parameters) {
+	HttpPrincipal _principal = null;
+
+	private HttpRequest(Method method, String path, byte[] bodyBytes,
+			Map<String, String> parameters, HttpPrincipal principal) {
 		_method = method;
 		_path = path;
 		_bodyBytes = bodyBytes;
 		_parameters = parameters;
+		_principal = principal;
 	}
 
 	static public HttpRequest create(HttpExchange exchange)
@@ -47,7 +52,7 @@ public class HttpRequest {
 
 		// Determining method
 		Method method;
-		
+
 		log.info("Creating HttpRequest object, with following properties:");
 
 		if (exchange.getRequestMethod().equals("GET"))
@@ -63,78 +68,104 @@ public class HttpRequest {
 					"Could not create HttpRequest, no vaild method");
 
 		log.info("\t Method: " + method);
-		
+
 		// Getting requested-path information
-		URI uri = exchange.getRequestURI();			
-		//String query = uri.getQuery();
-		String path = uri.getPath();		
+		URI uri = exchange.getRequestURI();
+		// String query = uri.getQuery();
+		String path = uri.getPath();
 		log.info("\t Path: " + path);
-		
+
 		Headers headers = exchange.getRequestHeaders();
 
-		// Parsing body
+		// Parsing parameters, which involves Cookies, GET- and POST parameters
+		Map<String, String> parameters = new HashMap<String, String>();
+		// Parsing cookies
+		String cookieStr = headers.getFirst("Cookie");
+		if (cookieStr != null && cookieStr.length() > 0)
+			HttpRequest.parseCookiesParameters(cookieStr, parameters);
+
+		// Parsing body (POST parameters)
 		InputStream body = exchange.getRequestBody();
-		
-		Map<String, String> parameters = null;
 
 		String bodyLenStr = headers.getFirst("Content-Length");
-		
+
 		log.info("\t Body length: " + bodyLenStr);
-		
+
 		byte[] bodyBytes = null;
-		if (bodyLenStr != null){			
-			
+		if (bodyLenStr != null) {
 			int bodyLen = Integer.parseInt(bodyLenStr);
 			bodyBytes = new byte[bodyLen];
 			ByteArrayOutputStream os = new ByteArrayOutputStream(bodyLen);
 			int readByteNum = 0;
-			while ((readByteNum = body.read(bodyBytes)) > 0){
-				os.write(bodyBytes, 0, readByteNum);									
+			while ((readByteNum = body.read(bodyBytes)) > 0) {
+				os.write(bodyBytes, 0, readByteNum);
 			}
 			bodyBytes = os.toByteArray();
-			parameters = HttpRequest.parseParameter(new ByteArrayInputStream(bodyBytes), bodyBytes.length);
+			if (bodyBytes != null)
+				HttpRequest.parsePostParameters(new ByteArrayInputStream(
+						bodyBytes), bodyBytes.length, parameters);
 		}
 
-		return new HttpRequest(method, path, bodyBytes, parameters);
+		return new HttpRequest(method, path, bodyBytes, parameters, exchange
+				.getPrincipal());
 
 	}
 
-	static private Map<String, String> parseParameter(InputStream body,
-			int bodyLength) throws HttpHandlerException, IOException {
+	static private void parseCookiesParameters(String cookieStr,
+			Map<String, String> parameters) throws HttpHandlerException,
+			IOException {
 
-		Map<String, String> parameters = new HashMap<String, String>();
-		
+		StringTokenizer st = new StringTokenizer(cookieStr, ";");
+
+		while (st.hasMoreElements()) {
+			String current = st.nextToken();
+			int index = current.indexOf("=");
+			String key = current.substring(0, index).replaceAll(" ", "");
+			String value = current.substring(index + 1);
+			parameters.put(key, value);
+		}
+
+	}
+
+	static private void parsePostParameters(InputStream body, int bodyLength,
+			Map<String, String> parameters) throws HttpHandlerException,
+			IOException {
+
 		try {
-						
+
 			byte[] bodyBytes = new byte[bodyLength];
 			body.read(bodyBytes);
 			String bodyStr = new String(bodyBytes);
 			bodyStr = bodyStr.replace("+", " ");
 			StringTokenizer st = new StringTokenizer(bodyStr, "&");
-			
+
 			while (st.hasMoreElements()) {
 				String current = st.nextToken();
 				int index = current.indexOf("=");
 				if (index > 0) {
 					String key = URLDecoder.decode(current.substring(0, index),
 							"UTF-8");
-					String value = URLDecoder.decode(current.substring(index + 1),
-							"UTF-8");
+					String value = URLDecoder.decode(current
+							.substring(index + 1), "UTF-8");
 					log.info("Parameter: " + key + " = " + value);
 					parameters.put(key, value);
+
 				}
 			}
+
 		} catch (UnsupportedEncodingException e) {
 			throw new HttpHandlerException(e);
-		} 
-		
-		return parameters;
+		}
 	}
-	
-	public String getParameterValue(String key){
+
+	public HttpPrincipal getHttpPrincipal() {
+		return _principal;
+	}
+
+	public String getParameterValue(String key) {
 		return _parameters.get(key);
 	}
-	
+
 	public byte[] getBodyBytes() {
 		return _bodyBytes;
 	}

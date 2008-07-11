@@ -11,14 +11,27 @@
 	 		<h1> 
 	 			<span id="menu_link">link1</span> 
 	 			<span id="menu_link">link2</span>
-	 			<span id="menu_link"><a href="login">login</a></span>
+	 			<span id="menu_link"><a href="logout">logout</a></span>
 	 		</h1>
 		</div>	
 		<div id="left">
-			<h2>menu left</h2>
+			<h2>left</h2>		
 		</div>
 		<div id="right">
-			<h2>menu right</h2>
+			<h2>right</h2>
+	 			<form name="login" action="login" method="post">
+		 			<table>
+		 				<tr>
+		 					<td>user name:</td><td><input id="menu_input" name="username" type=text size=10></td>
+		 				</tr>
+		 				<tr>
+		 					<td>password:</td><td><input id="menu_input" name="password" type=text size=10></td>
+		 				</tr>
+		 				<tr>
+		 					<td></td><td><input id="menu_input" type="submit" value="submit"></td>
+		 				</tr>
+		 			</table>
+	 			</form>	
 		</div>
 		<div id="content">
 			<h2>Welcome to the OpenSign server project!</h2>

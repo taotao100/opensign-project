@@ -66,6 +66,21 @@
       <artifactId>maven-eclipse-plugin</artifactId>
       <version>1.9</version>
     </dependency>
+    <!--<dependency>
+      <groupId>hsqldb</groupId>
+      <artifactId>hsqldb</artifactId>
+      <version>1.8.0.7</version>
+    </dependency>
+    <dependency>
+      <groupId>hibernate</groupId>
+      <artifactId>hibernate</artifactId>
+      <version>3.1rc2</version>
+    </dependency>
+    <dependency>
+      <groupId>javax.persistence</groupId>
+      <artifactId>persistence-api</artifactId>
+      <version>1.0</version>
+    </dependency>-->
   </dependencies>
   <reporting>
     <plugins>

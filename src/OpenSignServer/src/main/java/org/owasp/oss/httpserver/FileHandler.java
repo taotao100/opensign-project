@@ -77,8 +77,8 @@ public class FileHandler implements HttpHandler {
 
 				byte[] bytesToSign = req.getParameterValue("sign").getBytes();
 				
-				CertificationAuthority ca = new CertificationAuthority();
-				Certificate cert = ca.processCsr(new ByteArrayInputStream(bytesToSign));
+				CertificationAuthority ca = CertificationAuthority.getInstance();
+				Certificate cert = ca.processCsr(new ByteArrayInputStream(bytesToSign), "test");
 				
 				responseBody.write(ca.certificateToPEM(cert));
 

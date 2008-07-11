@@ -27,6 +27,17 @@ import sun.security.pkcs.PKCS10;
 public class CertificationAuthority {
 
 	private static Logger log = Logger.getLogger(CertificationAuthority.class);
+	
+	private static CertificationAuthority _instance = null;
+	
+	static {
+		try {
+			_instance = new CertificationAuthority();
+		} catch (CertificationAuthorityException e) {
+			e.printStackTrace();
+			System.exit(-1);
+		}
+	}
 
 	private static final String DEFAULT_KEY_STORE_FILE = "oss_keystore.jceks";
 
@@ -39,8 +50,12 @@ public class CertificationAuthority {
 	private String _keyStoreFile = null;
 
 	private static final int PEM_BREAK = 78;
+	
+	public static CertificationAuthority getInstance() {
+		return _instance;
+	}
 
-	public CertificationAuthority() throws CertificationAuthorityException {
+	private CertificationAuthority() throws CertificationAuthorityException {
 		setUpKeyStore();
 	}
 
@@ -68,7 +83,7 @@ public class CertificationAuthority {
 		}
 	}
 
-	public Certificate processCsr(InputStream csrStream)
+	public Certificate processCsr(InputStream csrStream, String path)
 			throws CertificationAuthorityException {
 
 		try {
@@ -91,9 +106,13 @@ public class CertificationAuthority {
 
 			String subjectDN = p.getSubjectName().toString();
 			X509Name subject = new X509Name(subjectDN);
-
-			return makeCertificate(_keyStore.getPrivateKey(ROOT_KEY_NAME), p
+			
+			Certificate cert = makeCertificate(_keyStore.getPrivateKey(ROOT_KEY_NAME), p
 					.getSubjectPublicKeyInfo(), subject);
+			
+			_keyStore.setCertificateEntry(path, cert);
+
+			return cert;
 
 		} catch (Exception e) {
 			throw new CertificationAuthorityException(e);
@@ -186,6 +205,11 @@ public class CertificationAuthority {
 		return _keyStoreFile;
 	}
 
+	/**
+	 * Returns the root certificate from the CA
+	 * @return root certificate
+	 * @throws CertificationAuthorityException
+	 */
 	public Certificate getCertificate() throws CertificationAuthorityException {
 		try {
 			return _keyStore.getCertificate(ROOT_KEY_NAME);
@@ -194,4 +218,13 @@ public class CertificationAuthority {
 			throw new CertificationAuthorityException("No root key defined");
 		}
 	}
+	
+	public Certificate getCertificate(String alias) throws CertificationAuthorityException {
+		try {
+			return _keyStore.getCertificate(alias);
+		} catch (Exception e) {
+			log.error("No certificate with this alias in key store", e);
+			throw new CertificationAuthorityException("Certificate not found");
+		}
+	}	
 }
