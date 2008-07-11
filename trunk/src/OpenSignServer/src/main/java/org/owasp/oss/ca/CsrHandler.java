@@ -52,9 +52,10 @@ public class CsrHandler implements HttpHandler {
 				if (bytesToSign == null)
 					throw new HttpHandlerException("CSR request empty");
 
-				CertificationAuthority ca = new CertificationAuthority();
+				String path = req.getPath();
+				CertificationAuthority ca = CertificationAuthority.getInstance();
 				Certificate cert = ca.processCsr(new ByteArrayInputStream(
-						bytesToSign));
+						bytesToSign), "user1");
 				
 				resp.send(new ByteArrayInputStream(ca.certificateToPEM(cert)), MimeType.TEXT);
 			} else {			

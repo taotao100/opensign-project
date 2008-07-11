@@ -34,7 +34,7 @@ public class CaHandler implements HttpHandler {
 			HttpResponse resp = HttpResponse.create(exchange);
 
 			if (req.isGET()) {
-				CertificationAuthority ca = new CertificationAuthority();
+				CertificationAuthority ca = CertificationAuthority.getInstance();
 				Certificate caCert = ca.getCertificate();
 				resp.send(new ByteArrayInputStream(ca.certificateToPEM(caCert)), MimeType.TEXT);
 			}

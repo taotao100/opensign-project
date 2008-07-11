@@ -3,24 +3,31 @@ package org.owasp.oss.httpserver;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Vector;
 
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpPrincipal;
 
 /**
  * This class is used to build and send the http-response
  */
 public class HttpResponse {
 
-	protected HttpExchange _exchange;
+	private HttpExchange _exchange;
 
-	protected Headers _headers;
+	private Headers _headers;
 
-	protected int _status = 200;
+	private int _status = 200;
+
+	private List<String> _cookieList = null;
 
 	public static enum MimeType {
 		HTML, CSS, TEXT
@@ -38,10 +45,10 @@ public class HttpResponse {
 			throws IOException {
 
 		String errorPage = null;
-		
+
 		Headers responseHeaders = exchange.getResponseHeaders();
 		responseHeaders.set("Content-Type", "text/html");
-      
+
 		if (errorType == ErrorType.FORBIDDEN) {
 			errorPage = "<head><title>Error</title></head><body><p><h1>Forbidden</h1></p><hr></body></html>";
 			exchange.sendResponseHeaders(403, errorPage.length());
@@ -57,10 +64,10 @@ public class HttpResponse {
 	}
 
 	public static void sendDebugPage(HttpExchange exchange) throws IOException {
-		
+
 		// only plain text sent
 		Headers responseHeaders = exchange.getResponseHeaders();
-		responseHeaders.set("Content-Type", "text/html");
+		responseHeaders.set("Content-Type", "text/plain");
 
 		// response is OK (200)
 		exchange.sendResponseHeaders(200, 0);
@@ -87,6 +94,17 @@ public class HttpResponse {
 			responseBody.write(s.getBytes());
 		}
 
+		responseBody.write("HttpPrincipal:\n".getBytes());
+		HttpPrincipal principal = exchange.getPrincipal();
+		if (principal != null)
+			responseBody.write(principal.toString().getBytes());
+		
+		//Body:
+		responseBody.write("Body:\n".getBytes());
+		InputStream body = exchange.getRequestBody();
+		while (body.available() > 0)
+			responseBody.write(body.read());
+
 		responseBody.close();
 
 	}
@@ -94,6 +112,7 @@ public class HttpResponse {
 	private HttpResponse(HttpExchange exchange) {
 		_headers = exchange.getResponseHeaders();
 		_exchange = exchange;
+		_cookieList = new Vector<String>();
 	}
 
 	private void setMimeType(MimeType type) {
@@ -105,9 +124,21 @@ public class HttpResponse {
 			_headers.add("Content-Type", "text/plain");
 	}
 
+	/**
+	 * This method takes a name and value, which will be placed in the header as
+	 * part of the cookie
+	 * 
+	 * @param nameValue
+	 *            name and value in form of: "name=value"
+	 */
+	public void setCookie(String nameValue) {
+		// Example: Set-Cookie: CUSTOMER=WILE_E_COYOTE; path=/; expires=Wednesday, 09-Nov-99 23:12:40 GMT
+		_headers.set("Set-cookie", nameValue);
+	}
+
 	public void send(InputStream body, MimeType type) throws IOException {
 		setMimeType(type);
-
+			
 		long bodyLength = body.available();
 		_exchange.sendResponseHeaders(_status, bodyLength);
 
