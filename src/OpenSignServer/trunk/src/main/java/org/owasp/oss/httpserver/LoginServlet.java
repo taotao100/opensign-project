@@ -1,6 +1,7 @@
 package org.owasp.oss.httpserver;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -34,8 +35,14 @@ public class LoginServlet extends HttpServlet {
 			if (user != null) {
 				if (user.getPassword().equals(password)) {
 					session.setAttribute("userName", user);
-					resp.getWriter().println("success");
-					return;
+					OSSHtmlTemplate template = new OSSHtmlTemplate();
+					template.setUserName(user.getUserName());
+					template.setContent("Successfully logged in!");
+					template.setTitle("Login");
+					
+					PrintWriter respBody = resp.getWriter();
+					respBody.write(template.build());
+					respBody.flush();
 				}
 			}			
 		} 
@@ -50,8 +57,27 @@ public class LoginServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-		System.out.println(req.toString());
-		super.doGet(req, resp);
+		
+		String content = 
+		"<form name=\"login\" action=\"/login\" method=\"POST\">" +
+			"<table><tr>" +
+					"<td>user name:</td><td><input id=\"menu_input\" name=\"user_name\" value=\"user1\" type=text size=40></td>" +
+				"</tr><tr>" +
+					"<td>password:</td><td><input id=\"menu_input\" name=\"password\" value=\"123\" type=text size=40></td>" +
+				"</tr><tr>" +
+					"<td></td><td><input id=\"menu_input\" type=\"submit\" value=\"submit\"></td>" +
+				"</tr>" +
+			"</table>" +
+		"</form>";
+		
+		OSSHtmlTemplate template = new OSSHtmlTemplate();
+	
+		template.setContent(content);
+		template.setTitle("Login");
+		
+		PrintWriter respBody = resp.getWriter();
+		respBody.write(template.build());
+		respBody.flush();
 	}
 
 	

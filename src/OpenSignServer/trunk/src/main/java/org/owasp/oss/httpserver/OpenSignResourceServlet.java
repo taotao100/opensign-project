@@ -46,9 +46,13 @@ public class OpenSignResourceServlet extends HttpServlet {
 			User user = (User)session.getAttribute("userName");
 			String name = (user == null)? "guest" : user.getUserName();
 			
+			OSSHtmlTemplate template = new OSSHtmlTemplate();
+			template.setUserName(name);
+			template.setContent("Requested resource: " + path);
+			template.setTitle("user profile");
+			
 			PrintWriter respBody = resp.getWriter();
-			respBody.write("<p><b>Profile</b></p>");
-			respBody.write(name + " @ " + path);
+			respBody.write(template.build());
 			respBody.flush();
 			return;
 			

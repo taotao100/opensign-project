@@ -1,6 +1,7 @@
 package org.owasp.oss.httpserver;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -26,6 +27,12 @@ public class LogoutServlet extends HttpServlet {
 		HttpSession session = req.getSession();
 		session.invalidate();
 
-		resp.getWriter().println("success");
+		OSSHtmlTemplate template = new OSSHtmlTemplate();
+		template.setContent("Successfully logged out!");
+		template.setTitle("Logout");
+		
+		PrintWriter respBody = resp.getWriter();
+		respBody.write(template.build());
+		respBody.flush();
 	}
 }

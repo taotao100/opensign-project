@@ -43,7 +43,9 @@ public class OSSHttpServer {
 				"/login");
 		contextServlets.addServlet(new ServletHolder(new LogoutServlet()),
 				"/logout");
-
+		contextServlets.addServlet(new ServletHolder(new CsrServlet()),
+		"/csr");
+		
 		List<User> userList = UserManager.getInstance().getAllUsers();
 		Iterator<User> iter = userList.iterator();
 		while (iter.hasNext())
