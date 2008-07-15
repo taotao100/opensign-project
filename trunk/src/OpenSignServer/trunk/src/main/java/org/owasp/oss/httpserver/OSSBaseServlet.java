@@ -21,44 +21,49 @@ public class OSSBaseServlet extends HttpServlet {
 	protected String _title;
 	protected String _content;
 	protected User _user;
-	protected String _userName = "guest";
+	protected String _userName;
 	private HttpServletRequest _req;
 	private HttpServletResponse _resp;
-	
-	protected void load(HttpServletRequest req,
-			HttpServletResponse resp) throws IOException {
+
+	protected void load(HttpServletRequest req, HttpServletResponse resp)
+			throws IOException {
 		_req = req;
 		_resp = resp;
-		
+
 		_user = (User) req.getSession().getAttribute("user");
 		if (_user != null) {
 			_userName = _user.getUserName();
-		}		
+		}
 	}
-	
+
 	protected boolean isUserSet() throws IOException {
 		if (_user != null)
 			return true;
-		
+
 		_content = "You need to log in before using this service";
 		send();
-		
-		return false;		
+
+		return false;
 	}
-	
+
 	protected void send() throws IOException {
 		OSSHtmlTemplate template = new OSSHtmlTemplate();
-		
+
 		template.setContent(_content);
 		template.setTitle(_title);
-		template.setUserName(_userName);
+		
+		if (_user == null)
+			template.setUserName("guest");
+		else
+			template.setUserName("<a href=\"/" + _user.getResourcePathAndName() + "\" >" + _userName + "</a>");
+		
 		PrintWriter respBody = _resp.getWriter();
 		respBody.write(template.build());
 		respBody.flush();
-		reset();		
+		reset();
 	}
-	
-	private void reset(){
+
+	private void reset() {
 		_content = "";
 		_userName = "";
 		_title = "";
