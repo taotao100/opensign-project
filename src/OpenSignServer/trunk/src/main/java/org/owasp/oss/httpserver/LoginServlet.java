@@ -38,7 +38,8 @@ public class LoginServlet extends OSSBaseServlet {
 				if (user.getPassword().equals(password)) {
 					session.setAttribute("user", user);
 					
-					_userName = user.getUserName();
+					_user = user;
+					_userName = userName;
 					_content = "Successfully logged in!";
 					_title = "Login";
 					

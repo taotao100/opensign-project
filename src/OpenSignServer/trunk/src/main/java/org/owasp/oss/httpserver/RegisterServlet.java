@@ -6,6 +6,8 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateEncodingException;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
@@ -21,6 +23,14 @@ import org.owasp.oss.ca.UserManager;
 
 public class RegisterServlet extends OSSBaseServlet {
 
+	private String getSuperResourcesSelect() {
+		List<User> userList = UserManager.getInstance().getAllUsers();
+		StringBuffer selectStr = new StringBuffer();;
+		Iterator<User> iter = userList.iterator();
+		while (iter.hasNext())
+			selectStr.append("<option>" + iter.next().getResourcePathAndName() + "</option>" );
+		return selectStr.toString();
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -39,12 +49,10 @@ public class RegisterServlet extends OSSBaseServlet {
 		
 		_content = 
 			"<form name=\"login\" action=\"/register\" method=\"POST\">" +
-				"<table><tr>" +
-						"<td>user name:</td><td><input id=\"menu_input\" name=\"user_name\" value=\"user1\" type=text size=40></td>" +
-					"</tr><tr>" +
-						"<td>password:</td><td><input id=\"menu_input\" name=\"password\" value=\"123\" type=text size=40></td>" +
-					"</tr><tr>" +
-						"<td></td><td><input id=\"menu_input\" type=\"submit\" value=\"register\"></td>" +
+				"<table><tr><td>super:</td><td><select name=\"super_resource\">" + getSuperResourcesSelect() +  "</select></td></tr>" +
+						"<tr><td>user name:</td><td><input id=\"menu_input\" name=\"user_name\" value=\"user1\" type=text size=40></td></tr>" +
+						"<tr><td>password:</td><td><input id=\"menu_input\" name=\"password\" value=\"123\" type=text size=40></td></tr>" +
+						"<tr><td></td><td><input id=\"menu_input\" type=\"submit\" value=\"register\"></td>" +
 					"</tr>" +
 				"</table>" +
 			"</form>";			
@@ -71,13 +79,14 @@ public class RegisterServlet extends OSSBaseServlet {
 		HttpSession session = req.getSession();
 		String userName = req.getParameter("user_name");
 		String password = req.getParameter("password");
+		String superResource = req.getParameter("super_resource");
 		
 		UserManager um = UserManager.getInstance();
-		User user = new User(userName, password, "root");
+		User user = new User(userName, password, superResource);
 		
 		um.registerUser(user);
 		String resourceName = "/" + user.getResourcePath() + "/" + userName;
-		OSSHttpServer.getInstance().registerOsResource(resourceName);
+		OSSHttpServer.getInstance().registerOsResource(resourceName);						
 		
 		_content = "<p>user successfully registered!<p>" +
 			"<br /><p>please log in now at: <a href=\"/login\">login</a></p>" +

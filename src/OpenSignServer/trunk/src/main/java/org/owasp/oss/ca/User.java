@@ -24,6 +24,14 @@ public class User {
 		_resourcePath = resourcePath;
 	}
 	
+	
+	/**
+	 * @return the _resourcePath and _userName;
+	 */
+	public String getResourcePathAndName() {
+		return _resourcePath + "/" + _userName;
+	}
+	
 	/**
 	 * @return the _resourcePath
 	 */
