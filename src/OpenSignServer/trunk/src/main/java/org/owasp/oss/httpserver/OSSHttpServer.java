@@ -19,9 +19,15 @@ public class OSSHttpServer {
 	private static OSSHttpServer _instance = new OSSHttpServer();
 
 	private Server _server;
+	private Context _contextServlets;
 
 	public static OSSHttpServer getInstance() {
 		return _instance;
+	}
+	
+	public void registerOsResource(String resourceName) {
+		_contextServlets.addServlet(new ServletHolder(
+				new OpenSignResourceServlet()), resourceName);		
 	}
 
 	public void start() throws Exception {
@@ -36,21 +42,22 @@ public class OSSHttpServer {
 		hw.addHandler(new DefaultHandler());
 		contextDoc.setHandler(resourceHandler);
 
-		Context contextServlets = new Context(_server, "/", Context.SESSIONS);
-		contextServlets.addServlet(new ServletHolder(
+		_contextServlets = new Context(_server, "/", Context.SESSIONS);
+		_contextServlets.addServlet(new ServletHolder(
 				new OpenSignResourceServlet()), "/root");
-		contextServlets.addServlet(new ServletHolder(new LoginServlet()),
+		_contextServlets.addServlet(new ServletHolder(new LoginServlet()),
 				"/login");
-		contextServlets.addServlet(new ServletHolder(new LogoutServlet()),
+		_contextServlets.addServlet(new ServletHolder(new LogoutServlet()),
 				"/logout");
-		contextServlets.addServlet(new ServletHolder(new CsrServlet()),
+		_contextServlets.addServlet(new ServletHolder(new CsrServlet()),
 		"/csr");
+		_contextServlets.addServlet(new ServletHolder(new RegisterServlet()),
+		"/register");		
 		
 		List<User> userList = UserManager.getInstance().getAllUsers();
 		Iterator<User> iter = userList.iterator();
 		while (iter.hasNext())
-			contextServlets.addServlet(new ServletHolder(
-					new OpenSignResourceServlet()), "/root/" +iter.next().getUserName());
+			registerOsResource("/root/" +iter.next().getUserName());
 
 		// String loginConfFile =
 		// Configuration.getInstance().getConfigurationFileAndPath

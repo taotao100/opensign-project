@@ -12,7 +12,7 @@ import javax.servlet.http.HttpSession;
 import org.owasp.oss.ca.User;
 import org.owasp.oss.ca.UserManager;
 
-public class LogoutServlet extends HttpServlet {
+public class LogoutServlet extends OSSBaseServlet {
 
 	/*
 	 * (non-Javadoc)
@@ -26,13 +26,10 @@ public class LogoutServlet extends HttpServlet {
 			throws ServletException, IOException {
 		HttpSession session = req.getSession();
 		session.invalidate();
-
-		OSSHtmlTemplate template = new OSSHtmlTemplate();
-		template.setContent("Successfully logged out!");
-		template.setTitle("Logout");
 		
-		PrintWriter respBody = resp.getWriter();
-		respBody.write(template.build());
-		respBody.flush();
+		load(req, resp);
+		_content = "Successfully logged out!";
+		_title = "Logout";
+		send();
 	}
 }

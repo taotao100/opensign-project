@@ -12,7 +12,7 @@ import javax.servlet.http.HttpSession;
 import org.owasp.oss.ca.User;
 import org.owasp.oss.ca.UserManager;
 
-public class CsrServlet extends HttpServlet {
+public class CsrServlet extends OSSBaseServlet {
 
 
 	/* (non-Javadoc)
@@ -22,8 +22,15 @@ public class CsrServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		
-		String content = 
-		"<form name=\"input\" action=\"root\" method=\"post\">" +
+		this.load(req, resp);
+		if (!isUserSet())
+			return;
+		
+		_title = "issue csr";
+		
+		_content = 
+		"<p>Issuing request to: " + _user.getResourcePath()+ "</p>" +	
+		"<form name=\"input\" action=\"" + _user.getResourcePath() + "\" method=\"post\">" +
 			"<input type=\"hidden\" name=\"responseFormat\" value=\"PEM\" />" +
 		    "<p>Enter your certification request here:</p>" +
 				"<textarea cols=\"60\" rows=\"15\" name=\"csr\">" +
@@ -42,15 +49,7 @@ public class CsrServlet extends HttpServlet {
 				"<input type=\"submit\" value=\"submit\">" +
 			 "</form>";
 		
-		OSSHtmlTemplate template = new OSSHtmlTemplate();
-	
-		template.setContent(content);
-		template.setTitle("issue csr");
-		
-		PrintWriter respBody = resp.getWriter();
-		respBody.write(template.build());
-		respBody.flush();
-	}
-
+		send();
+	}		
 	
 }

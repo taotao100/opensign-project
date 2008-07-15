@@ -106,6 +106,7 @@ public class CertificationAuthority {
 					.getSubjectPublicKeyInfo(), subject);
 			
 			_keyStore.setCertificateEntry(name, cert);
+			_keyStore.store();
 
 			return cert;
 

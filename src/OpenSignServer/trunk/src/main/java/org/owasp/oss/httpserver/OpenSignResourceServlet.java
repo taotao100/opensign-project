@@ -17,85 +17,88 @@ import javax.servlet.http.HttpSession;
 import org.owasp.oss.ca.CertificationAuthority;
 import org.owasp.oss.ca.CertificationAuthorityException;
 import org.owasp.oss.ca.User;
+import org.owasp.oss.ca.UserManager;
 
-public class OpenSignResourceServlet extends HttpServlet {
-
-	/* (non-Javadoc)
-	 * @see javax.servlet.http.HttpServlet#doGet(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
+public class OpenSignResourceServlet extends OSSBaseServlet {
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * javax.servlet.http.HttpServlet#doGet(javax.servlet.http.HttpServletRequest
+	 * , javax.servlet.http.HttpServletResponse)
 	 */
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		
-		String path = req.getPathInfo();
-		
-		path = req.getPathTranslated();
-		
-		path = req.getQueryString();
-		
-		path = req.getServletPath();
-		
-		path = req.getRequestURI();				
-		
+		load(req, resp);
+
+		String path = req.getRequestURI();
+
 		String property = req.getParameter("property");
+
+		CertificationAuthority ca = CertificationAuthority.getInstance();
 		
-		if (property == null) {
-			// Send ressource profile
-			
-			HttpSession session = req.getSession();
-			User user = (User)session.getAttribute("userName");
-			String name = (user == null)? "guest" : user.getUserName();
-			
-			OSSHtmlTemplate template = new OSSHtmlTemplate();
-			template.setUserName(name);
-			template.setContent("Requested resource: " + path);
-			template.setTitle("user profile");
-			
-			PrintWriter respBody = resp.getWriter();
-			respBody.write(template.build());
-			respBody.flush();
-			return;
-			
-		}
-		if (property.equals("cert")){
-			try {
-								
-				String certName = (path.charAt(0) == '/')? path.substring(1) : path;
-				CertificationAuthority ca =	CertificationAuthority.getInstance();
-				Certificate cert = ca.getCertificate(certName);
+		_title = "user profile";
+		
+		String resourceName = (path.charAt(0) == '/') ? path.substring(1)
+				: path;		
+
+		try {
+			if (property == null) {
+				// Send resource profile				
+
+				_content = "Requested resource: " + resourceName;
+
+				Certificate cert = ca.getCertificate(resourceName);
+				if (cert == null)
+					_content += "<br /><br /><br />Resource has no certificate";
+				else
+					_content += "<br /><br /><br />Certificate: <br /><br />" +
+								"<span id=\"certificate\">" +
+							    new String(ca.certificateToPEM(cert)) +
+							    "</span>";
 				
+
+				send();
+				return;
+
+			} else if (property.equals("cert")) {
+
+				Certificate cert = ca.getCertificate(resourceName);
+
 				if (cert == null) {
 					resp.sendError(HttpServletResponse.SC_FORBIDDEN);
 					return;
-				}					
-				
+				}
+
 				resp.setStatus(HttpServletResponse.SC_OK);
-				ServletOutputStream respBody = resp.getOutputStream();			
-				
-				 String format = req.getParameter("responseFormat");
-				    if (format != null){
-				    	if (format.equals("PEM")) {
-				    		resp.setContentType("text/plain");
-				    		respBody.write(ca.certificateToPEM(cert));
-				    		respBody.flush();
-				    		return;
-				    	}
-				    }
-				    	        
-				    respBody.write(cert.getEncoded());	
-				    respBody.flush();
-			} catch (CertificateEncodingException e) {				
-				e.printStackTrace();
-				resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-			} catch (CertificationAuthorityException e) {
-			    e.printStackTrace();
-			    resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-			}			
-			
-		} else 
+				ServletOutputStream respBody = resp.getOutputStream();
+
+				String format = req.getParameter("responseFormat");
+				if (format != null) {
+					if (format.equals("PEM")) {
+						resp.setContentType("text/plain");
+						respBody.write(ca.certificateToPEM(cert));
+						respBody.flush();
+						return;
+					}
+				}
+
+				respBody.write(cert.getEncoded());
+				respBody.flush();
+
+			} else
+				resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
+		} catch (CertificateEncodingException e) {
+			e.printStackTrace();
 			resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
+		} catch (CertificationAuthorityException e) {
+			e.printStackTrace();
+			resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
+		}
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -106,50 +109,62 @@ public class OpenSignResourceServlet extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
+		
+		load(req, resp);
 
 		try {
+
+			_title = "Issue CSR";
+
+			this.load(req, resp);
+			if (!isUserSet())
+				return;
+
+			String resourceName = _user.getResourcePath() + "/" + _userName;
+
 			String csr = req.getParameter("csr");
-			req.getUserPrincipal();
+
 			if (csr == null) {
 				// Check if only binary data is sent (client app)
 				InputStream bodyStream = req.getInputStream();
-				if (bodyStream == null){
+				if (bodyStream == null) {
 					resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
 					return;
 				}
-					
-				ByteArrayOutputStream bodyByteStream = new ByteArrayOutputStream();;
+
+				ByteArrayOutputStream bodyByteStream = new ByteArrayOutputStream();
+				;
 				int current = -1;
 				while ((current = bodyStream.read()) != -1)
 					bodyByteStream.write(current);
-				
-				csr = new String(bodyByteStream.toByteArray());				
+
+				csr = new String(bodyByteStream.toByteArray());
 			}
 
 			CertificationAuthority ca = CertificationAuthority.getInstance();
-			Certificate cert = ca.processCsr(csr, "user1");
-				        
-	        resp.setStatus(HttpServletResponse.SC_OK);
-	        ServletOutputStream respBody = resp.getOutputStream();
-	        
-	        String format = req.getParameter("responseFormat");
-	        if (format != null){
-	        	if (format.equals("PEM")) {
-	        		resp.setContentType("text/plain");
-	        		respBody.write(ca.certificateToPEM(cert));
-	        		respBody.flush();
-	        		return;
-	        	}
-	        }
-	        	        
-	        respBody.write(cert.getEncoded());	
-	        respBody.flush();
-	        
+			Certificate cert = ca.processCsr(csr, resourceName);
+
+			resp.setStatus(HttpServletResponse.SC_OK);
+			ServletOutputStream respBody = resp.getOutputStream();
+
+			String format = req.getParameter("responseFormat");
+			if (format != null) {
+				if (format.equals("PEM")) {
+					resp.setContentType("text/plain");
+					respBody.write(ca.certificateToPEM(cert));
+					respBody.flush();
+					return;
+				}
+			}
+
+			respBody.write(cert.getEncoded());
+			respBody.flush();
+
 		} catch (CertificationAuthorityException e) {
 			e.printStackTrace();
 		} catch (CertificateEncodingException e) {
 			e.printStackTrace();
 		}
-	}	
+	}
 
 }
