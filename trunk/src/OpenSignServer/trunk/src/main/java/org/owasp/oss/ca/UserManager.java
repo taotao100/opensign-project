@@ -30,15 +30,9 @@ public class UserManager {
 	
 	// TODO: Remove this and load Users from DB
 	private void dummyInit(){
-		User u1 = new User();
-		u1.setUserName("user1");
-		u1.setPassword("123");
-		User u2 = new User();
-		u2.setUserName("user2");
-		u2.setPassword("123");
-		User u3 = new User();
-		u3.setUserName("user3");
-		u3.setPassword("123");
+		User u1 = new User("user1", "123", "root");
+		User u2 = new User("user2", "123", "root");
+		User u3 = new User("user3", "123", "root");
 		
 		registerUser(u1);
 		registerUser(u2);
@@ -65,4 +59,6 @@ public class UserManager {
 		}
 		return false;
 	}	
+	
+	
 }

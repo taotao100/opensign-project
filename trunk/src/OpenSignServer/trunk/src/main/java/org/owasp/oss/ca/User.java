@@ -15,8 +15,27 @@ public class User {
 	private String _password;
 	private String _emailAddress;
 	private String _firstName;
-	private String _lastName;	
+	private String _lastName;
+	private String _resourcePath;
 	
+	public User(String userName, String password, String resourcePath){
+		_userName = userName;
+		_password = password;
+		_resourcePath = resourcePath;
+	}
+	
+	/**
+	 * @return the _resourcePath
+	 */
+	public String getResourcePath() {
+		return _resourcePath;
+	}
+	/**
+	 * @param path the _resourcePath to set
+	 */
+	public void setResourcePath(String path) {
+		_resourcePath = path;
+	}
 	/**
 	 * @return the _id
 	 */
@@ -50,7 +69,7 @@ public class User {
 	/**
 	 * @param _password the _password to set
 	 */
-	public void setPassword(String _password) {
+	public void setPassword(String password) {
 		this._password = _password;
 	}
 	/**

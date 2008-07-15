@@ -12,7 +12,7 @@ import javax.servlet.http.HttpSession;
 import org.owasp.oss.ca.User;
 import org.owasp.oss.ca.UserManager;
 
-public class LoginServlet extends HttpServlet {
+public class LoginServlet extends OSSBaseServlet {
 
 	/*
 	 * (non-Javadoc)
@@ -25,6 +25,8 @@ public class LoginServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		
+		this.load(req, resp);
+		
 		HttpSession session = req.getSession();
 		String userName = req.getParameter("user_name");
 		String password = req.getParameter("password");					
@@ -34,20 +36,18 @@ public class LoginServlet extends HttpServlet {
 			User user = UserManager.getInstance().getUser(userName);
 			if (user != null) {
 				if (user.getPassword().equals(password)) {
-					session.setAttribute("userName", user);
-					OSSHtmlTemplate template = new OSSHtmlTemplate();
-					template.setUserName(user.getUserName());
-					template.setContent("Successfully logged in!");
-					template.setTitle("Login");
+					session.setAttribute("user", user);
 					
-					PrintWriter respBody = resp.getWriter();
-					respBody.write(template.build());
-					respBody.flush();
+					_userName = user.getUserName();
+					_content = "Successfully logged in!";
+					_title = "Login";
+					
+					send();
+					return;
 				}
 			}			
 		} 
 		
-		System.out.println(req.toString());
 		resp.sendRedirect("error.html");
 	}
 
@@ -57,6 +57,8 @@ public class LoginServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
+		
+		load(req, resp);
 		
 		String content = 
 		"<form name=\"login\" action=\"/login\" method=\"POST\">" +
@@ -71,13 +73,10 @@ public class LoginServlet extends HttpServlet {
 		"</form>";
 		
 		OSSHtmlTemplate template = new OSSHtmlTemplate();
-	
-		template.setContent(content);
-		template.setTitle("Login");
+			
+		_title = "Login";
 		
-		PrintWriter respBody = resp.getWriter();
-		respBody.write(template.build());
-		respBody.flush();
+		send();
 	}
 
 	
