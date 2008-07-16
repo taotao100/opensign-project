@@ -1,16 +1,18 @@
 package org.owasp.oss;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.security.Provider;
 import java.security.Security;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Iterator;
 import java.util.Set;
-import java.util.StringTokenizer;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
@@ -74,12 +76,14 @@ public class OSSMain {
 			}
 		}
 	}
+	
+
 
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		
+
 		boolean init = true;
 
 		OSSMain.configureLogger();		

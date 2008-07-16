@@ -12,6 +12,13 @@
         <include>run.bat</include>
       </includes>
     </fileSet>  
+    <fileSet>
+			<directory>target</directory>
+			<outputDirectory>/jar</outputDirectory>
+			<includes>
+				<include>*.jar</include>
+			</includes>
+		</fileSet>
   </fileSets>
   <dependencySets>
     <dependencySet>

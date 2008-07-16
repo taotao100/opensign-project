@@ -32,13 +32,21 @@ public class UserManager {
 	
 	// TODO: Remove this and load Users from DB
 	private void dummyInit(){
-		User u1 = new User("user1", "123", "root");
-		User u2 = new User("user2", "123", "root");
-		User u3 = new User("user3", "123", "root");
-		
-		registerUser(u1);
-		registerUser(u2);
-		registerUser(u3);
+		try {
+			User u1 = new User("user1", "123", "root");
+			User u2 = new User("user2", "123", "root");
+			User u3 = new User("user3", "123", "root");
+			
+			u3.setIssuer(true);
+			CertificationAuthority.getInstance().registerIssuer(u3.getResourcePathAndName());		
+			
+			registerUser(u1);
+			registerUser(u2);
+			registerUser(u3);
+		} catch (CertificationAuthorityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public void registerUser(User user) {
