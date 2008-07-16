@@ -52,10 +52,12 @@ public class OSSBaseServlet extends HttpServlet {
 		template.setContent(_content);
 		template.setTitle(_title);
 		
-		if (_user == null)
+		if (_user == null) {
 			template.setUserName("guest");
-		else
+		}else{
+			template.setLogin(true);
 			template.setUserName("<a href=\"/" + _user.getResourcePathAndName() + "\" >" + _userName + "</a>");
+		}
 		
 		PrintWriter respBody = _resp.getWriter();
 		respBody.write(template.build());

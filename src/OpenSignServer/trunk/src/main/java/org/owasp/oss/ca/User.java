@@ -17,6 +17,7 @@ public class User {
 	private String _firstName;
 	private String _lastName;
 	private String _resourcePath;
+	private boolean _isIssuer = false;
 	
 	public User(String userName, String password, String resourcePath){
 		_userName = userName;
@@ -25,6 +26,22 @@ public class User {
 	}
 	
 	
+	/**
+	 * @return the isIssuer
+	 */
+	public boolean isIssuer() {
+		return _isIssuer;
+	}
+
+
+	/**
+	 * @param isIssuer the isIssuer to set
+	 */
+	public void setIssuer(boolean isIssuer) {
+		_isIssuer = isIssuer;
+	}
+
+
 	/**
 	 * @return the _resourcePath and _userName;
 	 */

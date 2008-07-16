@@ -1,14 +1,15 @@
 package org.owasp.oss.ca;
 
-import java.io.FileOutputStream;
-import java.io.InputStream;
 import java.security.KeyPair;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
+import java.util.Vector;
 
 import org.apache.log4j.Logger;
 import org.bouncycastle.asn1.x509.X509Name;
@@ -27,9 +28,11 @@ import sun.security.pkcs.PKCS10;
 public class CertificationAuthority {
 
 	private static Logger log = Logger.getLogger(CertificationAuthority.class);
-	
+
 	private static CertificationAuthority _instance = null;
-	
+
+	private List<String> _issuerList;
+
 	static {
 		try {
 			_instance = new CertificationAuthority();
@@ -50,41 +53,70 @@ public class CertificationAuthority {
 	private String _keyStoreFile = null;
 
 	private static final int PEM_BREAK = 78;
-	
+
 	public static CertificationAuthority getInstance() {
 		return _instance;
 	}
 
 	private CertificationAuthority() throws CertificationAuthorityException {
+
+		_issuerList = new Vector<String>();
 		setUpKeyStore();
 	}
 
 	private void setUpKeyStore() throws CertificationAuthorityException {
 		try {
-			_keyStoreFile = Configuration.getInstance().getResourceFileAndPath("CA_KEY_STORE_NAME");
+			_keyStoreFile = Configuration.getInstance().getResourceFileAndPath(
+					"CA_KEY_STORE_NAME");
 
 			if (_keyStoreFile == null || _keyStoreFile.length() < 1)
 				_keyStoreFile = DEFAULT_KEY_STORE_FILE;
 
 			_keyStore = new OSSKeyStore(_keyStoreFile, KEY_STORE_PASSWD);
-			if (!_keyStore.containsAlias(ROOT_KEY_NAME)) {
-				KeyPair pair = Crypto.generateKeyPair();
-				Certificate[] certChain = new Certificate[1];
-				certChain[0] = makeCertificate(pair.getPrivate(), pair
-						.getPublic());
-				_keyStore.setKeyEntry(ROOT_KEY_NAME, pair.getPrivate(),
-						certChain);
-				_keyStore.store();
-			}
+
+			registerIssuer(ROOT_KEY_NAME);
+
 		} catch (CryptoException e) {
 			throw new CertificationAuthorityException(e);
 		}
 	}
 
+	public void createIssuer(String name)
+			throws CertificationAuthorityException {
+		// TODO: Generate proper cert chain
+		try {
+			KeyPair pair = Crypto.generateKeyPair();
+			Certificate[] certChain = new Certificate[1];
+			certChain[0] = makeCertificate(pair.getPrivate(), pair.getPublic());
+			_keyStore.setKeyEntry(name, pair.getPrivate(), certChain);
+			_keyStore.store();
+		} catch (CryptoException e) {
+			throw new CertificationAuthorityException(e);
+		}
+	}
+
+	public void registerIssuer(String name)
+			throws CertificationAuthorityException {
+		// TODO: Generate proper cert chain
+		try {
+			if (!_keyStore.containsAlias(name)) {
+				createIssuer(name);
+			}
+			_issuerList.add(name);
+		} catch (CryptoException e) {
+			throw new CertificationAuthorityException(e);
+		}
+	}
+
+	public List<String> getIssuers() {
+		Collections.sort(_issuerList);
+		return _issuerList;
+	}
+
 	public Certificate processCsr(String csrStr, String name)
 			throws CertificationAuthorityException {
 
-		try {			
+		try {
 			csrStr = csrStr.replaceFirst(
 					"-----BEGIN NEW CERTIFICATE REQUEST-----", "")
 					.replaceFirst("-----END NEW CERTIFICATE REQUEST-----", "");
@@ -101,10 +133,11 @@ public class CertificationAuthority {
 
 			String subjectDN = p.getSubjectName().toString();
 			X509Name subject = new X509Name(subjectDN);
-			
-			Certificate cert = makeCertificate(_keyStore.getPrivateKey(ROOT_KEY_NAME), p
-					.getSubjectPublicKeyInfo(), subject);
-			
+
+			Certificate cert = makeCertificate(_keyStore
+					.getPrivateKey(ROOT_KEY_NAME), p.getSubjectPublicKeyInfo(),
+					subject);
+
 			_keyStore.setCertificateEntry(name, cert);
 			_keyStore.store();
 
@@ -203,6 +236,7 @@ public class CertificationAuthority {
 
 	/**
 	 * Returns the root certificate from the CA
+	 * 
 	 * @return root certificate
 	 * @throws CertificationAuthorityException
 	 */
@@ -214,13 +248,14 @@ public class CertificationAuthority {
 			throw new CertificationAuthorityException("No root key defined");
 		}
 	}
-	
-	public Certificate getCertificate(String alias) throws CertificationAuthorityException {
+
+	public Certificate getCertificate(String alias)
+			throws CertificationAuthorityException {
 		try {
 			return _keyStore.getCertificate(alias);
 		} catch (Exception e) {
 			log.error("No certificate with this alias in key store", e);
 			throw new CertificationAuthorityException("Certificate not found");
 		}
-	}	
+	}
 }

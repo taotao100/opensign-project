@@ -61,7 +61,9 @@ public class LoginServlet extends OSSBaseServlet {
 		
 		load(req, resp);
 		
-		String content = 
+		_title = "Login";
+		
+		_content = 
 		"<form name=\"login\" action=\"/login\" method=\"POST\">" +
 			"<table><tr>" +
 					"<td>user name:</td><td><input id=\"menu_input\" name=\"user_name\" value=\"user1\" type=text size=40></td>" +
@@ -71,11 +73,7 @@ public class LoginServlet extends OSSBaseServlet {
 					"<td></td><td><input id=\"menu_input\" type=\"submit\" value=\"submit\"></td>" +
 				"</tr>" +
 			"</table>" +
-		"</form>";
-		
-		OSSHtmlTemplate template = new OSSHtmlTemplate();
-			
-		_title = "Login";
+		"</form>";			
 		
 		send();
 	}

@@ -8,6 +8,7 @@ import org.mortbay.jetty.handler.DefaultHandler;
 import org.mortbay.jetty.handler.HandlerCollection;
 import org.mortbay.jetty.handler.ResourceHandler;
 import org.mortbay.jetty.servlet.Context;
+import org.mortbay.jetty.servlet.DefaultServlet;
 import org.mortbay.jetty.servlet.ServletHolder;
 import org.owasp.oss.ca.User;
 import org.owasp.oss.ca.UserManager;
@@ -34,15 +35,12 @@ public class OSSHttpServer {
 
 		_server = new Server(DEFAULT_SERVER_PORT);
 
-		Context contextDoc = new Context(_server, "/", Context.SESSIONS);
-		ResourceHandler resourceHandler = new ResourceHandler();
-		resourceHandler.setResourceBase("www");
-		HandlerCollection hw = new HandlerCollection();
-		hw.addHandler(resourceHandler);
-		hw.addHandler(new DefaultHandler());
-		contextDoc.setHandler(resourceHandler);
-
 		_contextServlets = new Context(_server, "/", Context.SESSIONS);
+		_contextServlets.setResourceBase("www");
+		_contextServlets.addServlet(new ServletHolder(
+				new DefaultServlet()), "/style.css");
+		_contextServlets.addServlet(new ServletHolder(
+				new HomeServlet()), "/");
 		_contextServlets.addServlet(new ServletHolder(
 				new OpenSignResourceServlet()), "/root");
 		_contextServlets.addServlet(new ServletHolder(new LoginServlet()),
@@ -57,7 +55,7 @@ public class OSSHttpServer {
 		List<User> userList = UserManager.getInstance().getAllUsers();
 		Iterator<User> iter = userList.iterator();
 		while (iter.hasNext())
-			registerOsResource("/root/" +iter.next().getUserName());
+			registerOsResource("/root/" + iter.next().getUserName());
 
 		// String loginConfFile =
 		// Configuration.getInstance().getConfigurationFileAndPath
