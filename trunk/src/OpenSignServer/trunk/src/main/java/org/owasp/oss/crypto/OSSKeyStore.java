@@ -132,7 +132,7 @@ public class OSSKeyStore {
 
 	public void setCertificateEntry(String alias, Certificate cert)
 			throws CryptoException {
-		try {
+		try {			
 			_keyStore.setCertificateEntry(alias, cert);
 		} catch (Exception e) {
 			throw new CryptoException(e);
@@ -159,7 +159,7 @@ public class OSSKeyStore {
 
 			log.info("Following keys available:");
 			while (e.hasMoreElements())
-				log.info("\t " + e.nextElement());
+				log.info("\t" + e.nextElement());
 
 		} catch (Exception e) {
 			throw new CryptoException(e);

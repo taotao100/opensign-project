@@ -13,8 +13,42 @@ This file elaborates the necessary steps to build the project from it's sources.
 == Maven ==
 
 	Download and install Maven2. Set the M2_HOME and M2 environment variable.
-	The project will now compile from command line (see section Maven Targets).
+	
+	Install Bouncy Castle version 140:
+	
+	D:\projects\owasp\svn\src\OpenSignServer>mvn install:install-file -DgroupId=bouncycastle -DartifactId=bcprov-jdk16 -Dversion=140 -Dpackaging=jar -Dfile=bcprov-jdk16-140.jar
+	
+	Create file .m2\repository\bouncycastle\bcprov-jdk16\140\bcprov-jdk16-140.pom in Maven repository with following content:
+	
+	
+	<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>bouncycastle</groupId>
+	<artifactId>bcprov-jdk16</artifactId>
+	<version>140</version>
+	<packaging>jar</packaging>
+	<name>Legion of the Bouncy Castle Java Cryptography APIs</name>
+	<description>The Bouncy Castle Crypto package is a Java implementation of cryptographic algorithms. The package is organised so that it contains a light-weight API suitable for use in any environment (including the newly released J2ME) with the additional infrastructure to conform the algorithms to the JCE framework.</description>
+	<url>http://www.bouncycastle.org/java.html</url>
+
+	<licenses>
+		<license>
+			<name>Bouncy Castle License</name>
+			<url>http://www.bouncycastle.org/licence.html</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
+</project>
+
+	
+	
+	The project will now compile from command line (see section Maven Targets).
+	
+	
+	
 
 == Eclipse ==
 
@@ -48,5 +82,8 @@ This file elaborates the necessary steps to build the project from it's sources.
   		mvn package
   	o Javadoc:
   		mvn javadoc:javadoc
+  		
+  		
+D:\projects\owasp\svn\src\OpenSignServer>mvn install:install-file -DgroupId=bouncycastle -DartifactId=bcprov-jdk16 -Dversion=140 -Dpackaging=jar -Dfile=bcprov-jdk16-140.jar  		
    
  

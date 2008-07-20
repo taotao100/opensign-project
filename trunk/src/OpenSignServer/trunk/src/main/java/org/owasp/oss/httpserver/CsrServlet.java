@@ -1,16 +1,13 @@
 package org.owasp.oss.httpserver;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
-import org.owasp.oss.ca.User;
-import org.owasp.oss.ca.UserManager;
+import org.apache.log4j.Logger;
+import org.owasp.oss.ca.CertificationAuthority;
 
 public class CsrServlet extends OSSBaseServlet {
 
@@ -26,10 +23,11 @@ public class CsrServlet extends OSSBaseServlet {
 			throws ServletException, IOException {
 
 		this.load(req, resp);
-		if (!isUserSet())
-			return;
-
+		
 		_title = "issue csr";
+		
+		if (!isUserSet())
+			return;		
 
 		if (_user.isIssuer()) {
 			_content = "<p>An issuer can't request a new certificate</p>";

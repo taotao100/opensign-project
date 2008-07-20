@@ -5,10 +5,15 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Properties;
 
+import org.apache.log4j.Logger;
+import org.owasp.oss.ca.CertificationAuthority;
+
 /**
  * This class reads the configuration file and provides the read values to the system. 
  */
 public class Configuration {
+	
+	private static Logger log = Logger.getLogger(CertificationAuthority.class);
 	
 	public enum ConfMode {
 		LIVE,
@@ -43,6 +48,7 @@ public class Configuration {
 
 	private Configuration() throws FileNotFoundException, IOException {
 		_properties = new Properties();
+		log.info("Loading configuration: " + CONFIGURATION_FILES_PATH + CONFIGURATION_FILE_NAME);
 		_properties.load(new FileInputStream(CONFIGURATION_FILES_PATH + CONFIGURATION_FILE_NAME));
 	}
 
@@ -76,7 +82,8 @@ public class Configuration {
 			return RESOURCES_FILE_PATH_TEST + _properties.getProperty(key);
 	}	
 	
-	private void reload(String fileName) throws FileNotFoundException, IOException {		
+	private void reload(String fileName) throws FileNotFoundException, IOException {
+		log.info("Reloading configuration: " + CONFIGURATION_FILES_PATH + fileName);
 		_properties.load(new FileInputStream(CONFIGURATION_FILES_PATH + fileName));
 	}
 

@@ -8,6 +8,8 @@ import junit.framework.TestSuite;
 
 import org.owasp.oss.TestBase;
 import org.owasp.oss.ca.CertificationAuthority;
+import org.owasp.oss.ca.UserManager;
+import org.owasp.oss.ca.model.User;
 
 public class CertificateAuthorityTest extends TestBase {
 
@@ -41,8 +43,15 @@ public class CertificateAuthorityTest extends TestBase {
 	public void testProcessCsr() throws Exception {
 
 		CertificationAuthority ca = CertificationAuthority.getInstance();
+
+		ca.createIssuer("test");		
+		
+		User user = new User();		
+		user.setUserName("user1");
+		user.setResourceName("test/user1");
+		user.setResourcePath("test");
 		Certificate cert = ca.processCsr(new String(loadFileBytes(TEST_CSR)),
-				"test");
+				user);
 		assertNotNull(cert);
 		// writeFile("cert1.cer", cert.getEncoded());
 	}

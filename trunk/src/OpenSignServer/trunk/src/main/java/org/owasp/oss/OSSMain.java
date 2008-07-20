@@ -1,22 +1,24 @@
 package org.owasp.oss;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.security.Provider;
 import java.security.Security;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.cfg.AnnotationConfiguration;
+import org.owasp.oss.ca.CertificationAuthority;
+import org.owasp.oss.ca.dao.DaoFactory;
+import org.owasp.oss.ca.dao.UserDao;
+import org.owasp.oss.ca.model.User;
 import org.owasp.oss.crypto.Crypto;
 import org.owasp.oss.httpserver.OSSHttpServer;
 
@@ -25,7 +27,11 @@ import org.owasp.oss.httpserver.OSSHttpServer;
  */
 public class OSSMain {
 	private static Logger log = Logger.getLogger(OSSMain.class);
-	private static Configuration conf = Configuration.getInstance();	
+	
+	private static Configuration conf = Configuration.getInstance();
+	
+	private static final SessionFactory sessionFactory = new AnnotationConfiguration()
+	.configure().buildSessionFactory();
 
 	/**
 	 * This method sets up the logger
@@ -76,8 +82,6 @@ public class OSSMain {
 			}
 		}
 	}
-	
-
 
 	/**
 	 * @param args
@@ -86,15 +90,16 @@ public class OSSMain {
 
 		boolean init = true;
 
-		OSSMain.configureLogger();		
+		//OSSMain.configureLogger();		
 
 		Security.addProvider(new BouncyCastleProvider());
-		Crypto crypto = Crypto.getInstance();
+		Crypto.getInstance();		
 
 		OSSHttpServer openSignServer = OSSHttpServer.getInstance();
 
 		try {
-			openSignServer.start();			
+			openSignServer.start();
+			CertificationAuthority.getInstance().createRoot();
 			System.out.println("Press enter to quit server");
 			new BufferedReader(new InputStreamReader(System.in)).readLine();
 			openSignServer.stop();

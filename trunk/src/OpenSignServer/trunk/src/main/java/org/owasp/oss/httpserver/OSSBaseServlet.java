@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.owasp.oss.ca.User;
+import org.owasp.oss.ca.model.User;
 
 /**
  * This class serves as base for all other servlet's in order to provide generic
@@ -56,7 +56,7 @@ public class OSSBaseServlet extends HttpServlet {
 			template.setUserName("guest");
 		}else{
 			template.setLogin(true);
-			template.setUserName("<a href=\"/" + _user.getResourcePathAndName() + "\" >" + _userName + "</a>");
+			template.setUserName("<a href=\"/" + _user.getResourceName() + "\" >" + _userName + "</a>");
 		}
 		
 		PrintWriter respBody = _resp.getWriter();
