@@ -16,6 +16,7 @@ import org.bouncycastle.asn1.x509.X509Name;
 import org.bouncycastle.util.encoders.Base64;
 import org.bouncycastle.x509.X509V3CertificateGenerator;
 import org.owasp.oss.Configuration;
+import org.owasp.oss.ca.model.User;
 import org.owasp.oss.crypto.Crypto;
 import org.owasp.oss.crypto.CryptoException;
 import org.owasp.oss.crypto.OSSKeyStore;
@@ -30,8 +31,6 @@ public class CertificationAuthority {
 	private static Logger log = Logger.getLogger(CertificationAuthority.class);
 
 	private static CertificationAuthority _instance = null;
-
-	private List<String> _issuerList;
 
 	static {
 		try {
@@ -60,11 +59,23 @@ public class CertificationAuthority {
 
 	private CertificationAuthority() throws CertificationAuthorityException {
 
-		_issuerList = new Vector<String>();
-		setUpKeyStore();
+		init();
+	}
+	
+	public void createRoot() {
+		UserManager um = UserManager.getInstance();
+		if (um.getUser(ROOT_KEY_NAME) == null) {
+			User user = new User();
+			user.setUserName(ROOT_KEY_NAME);
+			user.setResourceName(ROOT_KEY_NAME);
+			user.setIssuer(true);
+			user.setResourcePath("");
+			UserManager.getInstance().registerUser(user);
+		}
+
 	}
 
-	private void setUpKeyStore() throws CertificationAuthorityException {
+	private void init() throws CertificationAuthorityException {
 		try {
 			_keyStoreFile = Configuration.getInstance().getResourceFileAndPath(
 					"CA_KEY_STORE_NAME");
@@ -73,8 +84,6 @@ public class CertificationAuthority {
 				_keyStoreFile = DEFAULT_KEY_STORE_FILE;
 
 			_keyStore = new OSSKeyStore(_keyStoreFile, KEY_STORE_PASSWD);
-
-			registerIssuer(ROOT_KEY_NAME);
 
 		} catch (CryptoException e) {
 			throw new CertificationAuthorityException(e);
@@ -95,25 +104,7 @@ public class CertificationAuthority {
 		}
 	}
 
-	public void registerIssuer(String name)
-			throws CertificationAuthorityException {
-		// TODO: Generate proper cert chain
-		try {
-			if (!_keyStore.containsAlias(name)) {
-				createIssuer(name);
-			}
-			_issuerList.add(name);
-		} catch (CryptoException e) {
-			throw new CertificationAuthorityException(e);
-		}
-	}
-
-	public List<String> getIssuers() {
-		Collections.sort(_issuerList);
-		return _issuerList;
-	}
-
-	public Certificate processCsr(String csrStr, String name)
+	public Certificate processCsr(String csrStr, User user)
 			throws CertificationAuthorityException {
 
 		try {
@@ -135,10 +126,10 @@ public class CertificationAuthority {
 			X509Name subject = new X509Name(subjectDN);
 
 			Certificate cert = makeCertificate(_keyStore
-					.getPrivateKey(ROOT_KEY_NAME), p.getSubjectPublicKeyInfo(),
+					.getPrivateKey(user.getResourcePath()), p.getSubjectPublicKeyInfo(),
 					subject);
 
-			_keyStore.setCertificateEntry(name, cert);
+			_keyStore.setCertificateEntry(user.getResourceName(), cert);
 			_keyStore.store();
 
 			return cert;

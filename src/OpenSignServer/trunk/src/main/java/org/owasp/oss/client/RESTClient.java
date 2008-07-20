@@ -8,10 +8,15 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Arrays;
 
+import org.apache.log4j.Logger;
+import org.owasp.oss.ca.CertificationAuthority;
+
 /**
  * Class providing functionality to communicate with a RESTful server architecture
  */
 public class RESTClient {
+	
+	private static Logger log = Logger.getLogger(RESTClient.class);
 
 	/**
 	 * Retrieve a resource by issuing a GET request.

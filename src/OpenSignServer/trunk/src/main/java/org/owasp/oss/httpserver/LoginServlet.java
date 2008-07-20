@@ -1,19 +1,19 @@
 package org.owasp.oss.httpserver;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.owasp.oss.ca.User;
+import org.apache.log4j.Logger;
 import org.owasp.oss.ca.UserManager;
+import org.owasp.oss.ca.model.User;
 
 public class LoginServlet extends OSSBaseServlet {
 
+	private static Logger log = Logger.getLogger(OpenSignResourceServlet.class);
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -42,6 +42,8 @@ public class LoginServlet extends OSSBaseServlet {
 					_userName = userName;
 					_content = "Successfully logged in!";
 					_title = "Login";
+					
+					log.info("User " + _userName + " has logged in");
 					
 					send();
 					return;

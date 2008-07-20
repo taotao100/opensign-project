@@ -8,11 +8,16 @@ import java.security.PrivateKey;
 import java.security.Signature;
 import java.security.SignatureException;
 
+import org.apache.log4j.Logger;
+import org.owasp.oss.ca.CertificationAuthority;
+
 
 /**
  * Class providing cryptographic operations
  */
 public class Crypto {
+	
+	private static Logger log = Logger.getLogger(Crypto.class);
 	
 	private KeyPair _keyPair = null;
 	
@@ -26,7 +31,8 @@ public class Crypto {
 			KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA", "BC");
 			kpg.initialize(1024);
 			return kpg.generateKeyPair();
-		} catch (Exception e) {			
+		} catch (Exception e) {	
+			log.error("Failure during key pair generation");
 			throw new CryptoException(e);
 		}
 	}

@@ -3,23 +3,22 @@ package org.owasp.oss.httpserver;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintWriter;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateEncodingException;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
+import org.apache.log4j.Logger;
 import org.owasp.oss.ca.CertificationAuthority;
 import org.owasp.oss.ca.CertificationAuthorityException;
-import org.owasp.oss.ca.User;
-import org.owasp.oss.ca.UserManager;
 
 public class OpenSignResourceServlet extends OSSBaseServlet {
+	
+	private static Logger log = Logger.getLogger(OpenSignResourceServlet.class);
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -91,10 +90,10 @@ public class OpenSignResourceServlet extends OSSBaseServlet {
 			} else
 				resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
 		} catch (CertificateEncodingException e) {
-			e.printStackTrace();
+			log.error("Could not process GET request", e);
 			resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
 		} catch (CertificationAuthorityException e) {
-			e.printStackTrace();
+			log.error("Could not process GET request", e);
 			resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
 		}
 	}
@@ -120,7 +119,7 @@ public class OpenSignResourceServlet extends OSSBaseServlet {
 			if (!isUserSet())
 				return;
 
-			String resourceName = _user.getResourcePath() + "/" + _userName;
+			String resourceName = _user.getResourceName();
 
 			String csr = req.getParameter("csr");
 
@@ -142,7 +141,7 @@ public class OpenSignResourceServlet extends OSSBaseServlet {
 			}
 
 			CertificationAuthority ca = CertificationAuthority.getInstance();
-			Certificate cert = ca.processCsr(csr, resourceName);
+			Certificate cert = ca.processCsr(csr, _user);
 
 			resp.setStatus(HttpServletResponse.SC_OK);
 			ServletOutputStream respBody = resp.getOutputStream();
@@ -161,9 +160,11 @@ public class OpenSignResourceServlet extends OSSBaseServlet {
 			respBody.flush();
 
 		} catch (CertificationAuthorityException e) {
-			e.printStackTrace();
+			log.error("Could not process POST request", e);
+			resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
 		} catch (CertificateEncodingException e) {
-			e.printStackTrace();
+			log.error("Could not process POST request", e);
+			resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
 		}
 	}
 

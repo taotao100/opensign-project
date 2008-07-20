@@ -7,6 +7,7 @@ import junit.framework.TestSuite;
 
 import org.owasp.oss.Configuration;
 import org.owasp.oss.TestBase;
+import org.owasp.oss.ca.CertificationAuthority;
 import org.owasp.oss.client.RESTClient;
 import org.owasp.oss.httpserver.OSSHttpServer;
 
@@ -15,7 +16,8 @@ public class OSSHttpServerTest extends TestBase {
 	private OSSHttpServer _server = OSSHttpServer.getInstance();
 	protected void setUp() throws Exception {
 		super.setUp();
-		_server.start();		 
+		_server.start();
+		CertificationAuthority.getInstance().createRoot();
 	}
 
 	protected void tearDown() throws Exception {

@@ -3,17 +3,20 @@ package org.owasp.oss.httpserver;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+import org.mortbay.jetty.RequestLog;
 import org.mortbay.jetty.Server;
-import org.mortbay.jetty.handler.DefaultHandler;
-import org.mortbay.jetty.handler.HandlerCollection;
-import org.mortbay.jetty.handler.ResourceHandler;
 import org.mortbay.jetty.servlet.Context;
 import org.mortbay.jetty.servlet.DefaultServlet;
 import org.mortbay.jetty.servlet.ServletHolder;
-import org.owasp.oss.ca.User;
+import org.owasp.oss.ca.CertificationAuthority;
 import org.owasp.oss.ca.UserManager;
+import org.owasp.oss.ca.model.User;
+import org.owasp.oss.util.JettyLogger;
 
 public class OSSHttpServer {
+	
+	private static Logger log = Logger.getLogger(OSSHttpServer.class);
 
 	private static final int DEFAULT_SERVER_PORT = 8080;
 
@@ -26,15 +29,20 @@ public class OSSHttpServer {
 		return _instance;
 	}
 	
-	public void registerOsResource(String resourceName) {
+	public void registerOsResource(String resourceName) {		
+		log.info("Registering OpenSign resource: " + resourceName);
 		_contextServlets.addServlet(new ServletHolder(
-				new OpenSignResourceServlet()), resourceName);		
+				new OpenSignResourceServlet()), "/" + resourceName);		
 	}
 
 	public void start() throws Exception {
 
+		// Redirect Jetty logging:
+		System.setProperty("org.mortbay.log.class","org.owasp.oss.util.JettyLogger");		
+		org.mortbay.log.Log.setLog(new JettyLogger());
+		
 		_server = new Server(DEFAULT_SERVER_PORT);
-
+		
 		_contextServlets = new Context(_server, "/", Context.SESSIONS);
 		_contextServlets.setResourceBase("www");
 		_contextServlets.addServlet(new ServletHolder(
