@@ -16,7 +16,7 @@ This file elaborates the necessary steps to build the project from it's sources.
 	
 	Install Bouncy Castle version 140:
 	
-	D:\projects\owasp\svn\src\OpenSignServer>mvn install:install-file -DgroupId=bouncycastle -DartifactId=bcprov-jdk16 -Dversion=140 -Dpackaging=jar -Dfile=bcprov-jdk16-140.jar
+	mvn install:install-file -DgroupId=bouncycastle -DartifactId=bcprov-jdk16 -Dversion=140 -Dpackaging=jar -Dfile=bcprov-jdk16-140.jar
 	
 	Create file .m2\repository\bouncycastle\bcprov-jdk16\140\bcprov-jdk16-140.pom in Maven repository with following content:
 	
@@ -43,13 +43,15 @@ This file elaborates the necessary steps to build the project from it's sources.
 
 </project>
 
+== Database ==
 	
+	If intending to use a data base one will need to download and install MYSQL data base and set the storage type to MYSQL in file config.properties.
+	Make sure the MYSQL database has a account with the user name 'root' and empty password, which is the default configuration of MYSQL anyway.
 	
+
 	The project will now compile from command line (see section Maven Targets).
 	
 	
-	
-
 == Eclipse ==
 
 	Window -> Preferences -> Java -> Installed JREs:
@@ -82,8 +84,6 @@ This file elaborates the necessary steps to build the project from it's sources.
   		mvn package
   	o Javadoc:
   		mvn javadoc:javadoc
-  		
-  		
-D:\projects\owasp\svn\src\OpenSignServer>mvn install:install-file -DgroupId=bouncycastle -DartifactId=bcprov-jdk16 -Dversion=140 -Dpackaging=jar -Dfile=bcprov-jdk16-140.jar  		
+  				
    
  

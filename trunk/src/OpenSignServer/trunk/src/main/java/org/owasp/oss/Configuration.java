@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
 import org.owasp.oss.ca.CertificationAuthority;
 
 /**
@@ -13,7 +14,7 @@ import org.owasp.oss.ca.CertificationAuthority;
  */
 public class Configuration {
 	
-	private static Logger log = Logger.getLogger(CertificationAuthority.class);
+	private static Logger log = Logger.getLogger(Configuration.class);
 	
 	public enum ConfMode {
 		LIVE,
@@ -48,6 +49,9 @@ public class Configuration {
 
 	private Configuration() throws FileNotFoundException, IOException {
 		_properties = new Properties();
+		//System.setProperty("log4j.configuration" , "file:" + CONFIGURATION_FILES_PATH + "log4j.properties");
+		PropertyConfigurator.configure(CONFIGURATION_FILES_PATH + "log4j.properties");
+		log.info("Logger configured");
 		log.info("Loading configuration: " + CONFIGURATION_FILES_PATH + CONFIGURATION_FILE_NAME);
 		_properties.load(new FileInputStream(CONFIGURATION_FILES_PATH + CONFIGURATION_FILE_NAME));
 	}

@@ -78,6 +78,7 @@ public class OSSKeyStore {
 	public Certificate loadCertificateFromFile(String fileName)
 			throws CryptoException {
 		try {
+			
 			FileInputStream certificateStream = new FileInputStream(fileName);
 			CertificateFactory certificateFactory = CertificateFactory
 					.getInstance("X.509");

@@ -36,6 +36,7 @@ public class OSSHttpServer {
 	}
 
 	public void start() throws Exception {
+		log.info("OPENSIGN SERVER starting ...");
 
 		// Redirect Jetty logging:
 		System.setProperty("org.mortbay.log.class","org.owasp.oss.util.JettyLogger");		
@@ -65,80 +66,11 @@ public class OSSHttpServer {
 		while (iter.hasNext())
 			registerOsResource("/root/" + iter.next().getUserName());
 
-		// String loginConfFile =
-		// Configuration.getInstance().getConfigurationFileAndPath
-		// ("JAAS_CONF_FILE");
-		// if (loginConfFile == null)
-		// throw new Exception("No login conf file available");
-
-		// System.setProperty("java.security.auth.login.config", loginConfFile);
-		// //
-		// SecurityHandler securityHandler = new SecurityHandler();
-		//		
-		// JAASUserRealm userRealm = new JAASUserRealm("xyzrealm");
-		// userRealm.setLoginModuleName("xyz");
-		//		
-		// securityHandler.setUserRealm(userRealm);
-
-		// PropertyFileLoginModule propertyFileLoginModule = new
-		// PropertyFileLoginModule();
-		// propertyFileLoginModule.loadProperties(Configuration.getInstance().
-		// getConfigurationFileAndPath("LOGIN_FILE"));
-
-		// _server.setUserRealms(new UserRealm[]{userRealm});
-
-		// XmlConfiguration configuration = new XmlConfiguration(
-		// new FileInputStream(Configuration.getInstance().getFilePath(
-		// "JETTY_CONF_FILE")));
-		// configuration.configure(server);
-
-		// Context context = new Context(server,"/no",Context.SESSIONS);
-		// context.addServlet(new ServletHolder(new HelloServlet("Ciao")),
-		// "/*");
-
-		// Server server = new Server(DEFAULT_SERVER_PORT);
-		// Context contextDoc = new Context(server, "/doc",
-		// Context.SESSIONS|Context.NO_SECURITY);
-		//		
-		// ResourceHandler resourceHandler = new ResourceHandler();
-		// resourceHandler.setResourceBase("www");
-		// contextDoc.setHandler(resourceHandler);
-		//		
-		// Context root = new Context(server,"/",Context.SESSIONS);
-		// ServletHolder holder = new ServletHolder(new HelloServlet());
-		// holder.setName("test");
-		// root.addServlet(holder, "/ca");
-
-		// HandlerCollection handlerCollection = new HandlerCollection();
-		// ContextHandlerCollection contextHandlerCollection = new
-		// ContextHandlerCollection();
-		// //Context contextDoc = new Context(server, "/doc",
-		// Context.SESSIONS|Context.NO_SECURITY);
-		// ContextHandler contextHandler = new ContextHandler();
-		// contextHandler.setContextPath("/*");
-		// contextHandler.setResourceBase("www");
-		// contextHandler.setHandler(new ResourceHandler());
-		// contextHandlerCollection.setHandlers(new Handler[]{contextHandler});
-		// handlerCollection.addHandler(contextHandlerCollection);
-		// server.addHandler(handlerCollection);
-
-		// context.setResourceBase("www");
-		// ServletHandler servletHandler = new ServletHandler();
-		// servletHandler.addServlet(holder)
-		// context.addServlet(new ServletHolder(new HelloServlet("Ciao")),
-		// "/*");
-		//		
-		// handlerCollection.setHandlers(new Handler[]{new ResourceHandler()});
-		// context.addHandler(handlerCollection);
-
-		// HandlerCollection handlerCollection = new HandlerCollection();
-		// RequestLogHandler requestLogHandler = new RequestLogHandler();
-		// DefaultHandler defaultHandler = new DefaultHandler();
-
 		_server.start();
 	}
 
 	public void stop() throws Exception {
+		log.info("OPENSIGN SERVER stopping...");
 		_server.stop();
 	}
 }

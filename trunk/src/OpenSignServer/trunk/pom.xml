@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.owasp.oss</groupId>
 	<artifactId>OpenSignServer</artifactId>
-	<version>0.2</version>
+	<version>0.3</version>
 	<description>
 	</description>
 
@@ -29,6 +29,11 @@
 			</plugin>
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
+				<configuration>
+					<descriptors>
+						<descriptor>src/main/assembly/descriptor_tar.gz.xml</descriptor>
+					</descriptors>
+				</configuration>
 				<executions>
 					<execution>
 						<id>release-assembly</id>
@@ -38,10 +43,26 @@
 						</goals>
 					</execution>
 				</executions>
+			</plugin>
+			<plugin>
+				<artifactId>maven-clean-plugin</artifactId>
 				<configuration>
-					<descriptors>
-						<descriptor>descriptor_tar.gz.xml</descriptor>
-					</descriptors>
+					<filesets>
+						<fileset>
+							<directory>resources</directory>
+							<directory>log</directory>
+							<includes>
+								<include>*.log</include>
+							</includes>
+						</fileset>
+						<fileset>
+							<directory>resources</directory>
+							<includes>
+								<include>*.jceks</include>
+								<include>*.bks</include>
+							</includes>
+						</fileset>
+					</filesets>
 				</configuration>
 			</plugin>
 		</plugins>
