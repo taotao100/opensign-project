@@ -31,13 +31,6 @@ public class HomeServlet extends OSSBaseServlet {
 					"<ul><a href=\"root?property=cert&responseFormat=PEM\"> PEM </a></ul>" +
 				"</p>" +
 			"<br />" +
-				"<p>Available resources are:" + 
-					"<ul><a href=\"root\"> root </a></ul>" + 
-					"<ul><a href=\"root/user1\"> user1 </a> [passwd: 123]</ul>" +
-					"<ul><a href=\"root/user2\"> user2 </a> [passwd: 123]</ul>" +
-					"<ul><a href=\"root/user3\"> user3 </a> [passwd: 123]</ul>" +
-				"</p>" +
-			"<br />" +
 				"<p>Additional sites:" + 
 					"<ul><a href=\"csr\"> certificate sign request </a></ul>" +
 					"<ul><a href=\"login\"> login </a></ul>" +

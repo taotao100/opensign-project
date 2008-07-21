@@ -12,12 +12,18 @@ brief overview of supported features is given.
 
 	o Download and unpack OpenSignServer-XX.tar.gz package
 
+== Database ==
+	
+	If intending to use a data base one will need to download and install MYSQL
+	data base and set the storage type to MYSQL in file config.properties.
+	Make sure the MYSQL database has a account with the user name 'root' and
+	empty password, which is the default configuration of MYSQL anyway.
 
 == Configuration ==
 
-	o Configuration file: config.properties
+	o Configuration file: conf/config.properties
 
-	o Configuration of log method in file: log4j.properties
+	o Configuration of log method in file: conf/log4j.properties
  
 
 == Starting the Server ==
@@ -26,26 +32,19 @@ brief overview of supported features is given.
 
 	o Linux: java -jar jar\OpenSignServer-0.1.jar
 
-	Server starts at: http://localhost:8080 ,whereas the port is configurable
+    Server starts at: http://localhost:8080 ,whereas the port is configurable
 
 
 == Supported Features ==
 
-  o Demo-wise set up of an X.509 hierarchy intending to provide code siging 
-    certificates. This involves one root issuer, an unlimited number of sub-
-    issuers and end-users.     
-  o End-users may issue a certificate sign request and obtain the certificate 
-    in return.
-	o Demo accounts of to end-users ("user1", "user2") and two issuers ("root", 
-    "user3") each with password "123".    
-	o Possibility for registering new end-users and issuers.
-  o	Session handling - login, logout of users    
-  o Storage of issuer key-pair's and all certificates in server side key store.
-	o Public access of all certificates in the system, with support of binary 
-    and PEM format. Eg.: Certificate from root issuer may be retrieved 
-    - in binary format (default): 
-    		http://localhost:8080/root?property=cert
-    - or PEM formatted: 
-    		http://localhost:8080/root?property=cert&responseFormat=PEM     
-  o User/resource profile, which is accessible at the resource path without 
-    further parameters, eg.: http://localhost:8080/root/user1
+  o Easy extendable persistence layer, which is set up using Hibernate – 
+    Annotations.
+	o Possibility to run server in memory, whereas data is lost when the server 
+    process is terminated, or to run the server on top of a MYSQL database.
+	o Logging mechanism got enhanced which involves means to pipe the log 
+    information from OpenSign server as well as from Jetty and Hibernate to a 
+    log file.
+	o Same functionality as version 0.2 from a user point of view. Please consult:
+	  https://www.owasp.org/index.php/Project_Information:template_OpenSign_Server_Project
+	  for further information.  
+
