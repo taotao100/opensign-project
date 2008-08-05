@@ -87,6 +87,53 @@ public class KeyStoreTest extends TestBase {
 		assertEquals(privKey, keyPair.getPrivate());
 	}
 	
+	public void testRenewKey() throws Exception {
+		KeyPair keyPair = Crypto.generateKeyPair();
+		Certificate[] certChain = new Certificate[1];
+		certChain[0] = CertificationAuthority.makeCertificate(keyPair
+				.getPrivate(), keyPair.getPublic());
+
+		_store.setKeyEntry("test1", keyPair.getPrivate(), certChain);
+		_store.store();
+		
+		assertTrue(_store.getPrivateKey("test1") != null);
+		
+		_store.setKeyEntry("test1", keyPair.getPrivate(), certChain);
+		_store.store();
+		
+		assertTrue(_store.getPrivateKey("test1") != null);
+		
+		assertTrue(_store.getPublicKey("test1") != null);
+		
+		assertTrue(_store.getCertificate("test1") != null);
+		
+	}
+	
+	public void testDeleteKey() throws Exception {
+		KeyPair keyPair = Crypto.generateKeyPair();
+		Certificate[] certChain = new Certificate[1];
+		certChain[0] = CertificationAuthority.makeCertificate(keyPair
+				.getPrivate(), keyPair.getPublic());
+
+		_store.setKeyEntry("test1", keyPair.getPrivate(), certChain);
+		_store.store();
+		
+		assertTrue(_store.getPrivateKey("test1") != null);
+		
+		_store.setKeyEntry("test1", keyPair.getPrivate(), certChain);
+		_store.store();
+		_store.delete("test1");
+		
+		try {
+			_store.getPrivateKey("test1");
+			assertTrue(false);
+		} catch (Exception e) {
+
+		}
+		
+		
+	}	
+	
 	
 	public void genericKeyStoreTest(KeyStore store, String name, KeyPair kp,
 			Certificate[] certChain, String keyPass, String storePass)
