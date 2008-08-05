@@ -63,6 +63,14 @@ public class UserManager {
 			log.error("User " + user.getUserName() + " could not register", e);			
 		}
 	}
+	
+	public void storeUser(User user) {
+		log.info("Storing user " + user.getUserName());
+		Transaction tx = DaoFactory.getInstance().getSession()
+		.beginTransaction();
+		_userDao.store(user);
+		tx.commit();
+	}
 
 	public List<User> getAllUsers() {
 		return _userDao.getAll();
@@ -83,5 +91,8 @@ public class UserManager {
 		}
 		return false;
 	}
-
+	
+	public List<User> getAllSubEntities(String resourcePath) {
+		return _userDao.loadSubEntities(resourcePath);
+	}
 }

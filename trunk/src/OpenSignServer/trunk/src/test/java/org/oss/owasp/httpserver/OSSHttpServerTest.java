@@ -57,6 +57,6 @@ public class OSSHttpServerTest extends TestBase {
 		assertNotNull(resp);
 		assertTrue(resp.length > 100);
 		//Response is binary!
-		//System.out.println(new String(resp));
+		//System.out.println(new String(resp));		
 	}		
 }

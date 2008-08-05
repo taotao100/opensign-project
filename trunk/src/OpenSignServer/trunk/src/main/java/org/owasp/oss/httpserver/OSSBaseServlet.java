@@ -22,6 +22,7 @@ public class OSSBaseServlet extends HttpServlet {
 	protected String _content;
 	protected User _user;
 	protected String _userName;
+	protected String _resourceName;
 	private HttpServletRequest _req;
 	private HttpServletResponse _resp;
 
@@ -34,6 +35,10 @@ public class OSSBaseServlet extends HttpServlet {
 		if (_user != null) {
 			_userName = _user.getUserName();
 		}
+		
+		String path = req.getRequestURI();
+		_resourceName = (path.charAt(0) == '/') ? path.substring(1)
+				: path;	
 	}
 
 	protected boolean isUserSet() throws IOException {

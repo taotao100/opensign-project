@@ -22,6 +22,7 @@ public class OSSHtmlTemplate {
 				+ "<span id=\"logo\">OpenSign Server</span>" + "<h1>"
 				+ "<span id=\"menu_link\"><a href=\"/csr\">csr</a></span>"
 				+ loginStr
+				+ "<span id=\"menu_link\"><a href=\"/edit_profile\">edit profile</a></span>"
 				+ "<span id=\"menu_link\"><a href=\"/register\">register</a></span>"
 				+ "<span id=\"menu_link\"><a href=\"/\">home</a></span>"
 				+ "</h1>"
