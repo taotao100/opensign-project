@@ -12,7 +12,7 @@ This file elaborates the necessary steps to build the project from it's sources.
 
 == Maven ==
 
-	Download and install Maven2. Set the M2_HOME and M2 environment variable.
+	Download and install Maven2. Set the M2_HOME, M2 and JAVA_HOME environment variable as pointed out at: http://maven.apache.org/download.html.
 	
 	Install Bouncy Castle version 140:
 	
@@ -55,7 +55,7 @@ This file elaborates the necessary steps to build the project from it's sources.
 == Eclipse ==
 
 	Window -> Preferences -> Java -> Installed JREs:
-	Select: Java runtime environment 1.6
+	Select: Java Runtime Environment/ or Java Development Kit 1.6 
 	
 	Window -> Preferences -> Java -> Compiler:
 	Select: Compiler compliance level: 1.6

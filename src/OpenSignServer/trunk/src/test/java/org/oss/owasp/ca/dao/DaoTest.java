@@ -34,7 +34,7 @@ public class DaoTest extends TestBase {
 		}
 	}
 
-	public static void testUserDao() {
+	public void testUserDao() {
 
 		Long id = null;
 
@@ -97,6 +97,15 @@ public class DaoTest extends TestBase {
 		assertTrue(users.size() == 3);
 		List<User> issuers = userDao.loadIssuers();
 		assertTrue(issuers.size() == 2);
-
+	}
+	
+	public void testLoadSubEntities() {
+		DaoFactory factory = DaoFactory.getInstance();
+		UserDao userDao = factory.getUserDao();
+		List<User> users = userDao.loadSubEntities("root");
+		assertNotNull(users);
+		assertTrue(users.get(0).getUserName().equals("userName1"));
+		assertTrue(users.get(1).getUserName().equals("userName2"));
+		assertTrue(users.get(2).getUserName().equals("userName3"));
 	}
 }

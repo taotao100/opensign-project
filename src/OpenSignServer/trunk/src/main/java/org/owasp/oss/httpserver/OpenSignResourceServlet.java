@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateEncodingException;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
@@ -14,10 +16,40 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 import org.owasp.oss.ca.CertificationAuthority;
 import org.owasp.oss.ca.CertificationAuthorityException;
+import org.owasp.oss.ca.UserManager;
+import org.owasp.oss.ca.model.User;
 
 public class OpenSignResourceServlet extends OSSBaseServlet {
 	
 	private static Logger log = Logger.getLogger(OpenSignResourceServlet.class);
+	
+	private void buildCertificateBlock() throws CertificationAuthorityException {
+		
+		CertificationAuthority ca = CertificationAuthority.getInstance();
+		Certificate cert = ca.getCertificate(_resourceName);
+		if (cert == null)
+			_content += "<br /><br /><br />Resource has no certificate";
+		else
+			_content += "<br /><br /><br />Certificate: <br /><br />" +
+						"<span id=\"certificate\">" +
+					    new String(ca.certificateToPEM(cert)) +
+					    "</span>";
+	}
+	
+	private void buildSubEntitiesBlock() {
+		List<User> subEntitiesList = UserManager.getInstance().getAllSubEntities(_resourceName);
+		StringBuffer htmlBlock = new StringBuffer();
+		
+		_content += "<br /><br /><br />Sub-entities: <br /><ul>";
+		
+		Iterator<User> iter = subEntitiesList.iterator();
+		while (iter.hasNext()) {
+			User user = iter.next();
+			htmlBlock.append("<li><a href=\"" + user.getResourceName() + "\">" + user.getResourceName() + "</a></li>\r\n");
+		}
+		_content += "</ul>";
+		_content += htmlBlock.toString();
+	}
 	
 	/*
 	 * (non-Javadoc)
@@ -31,40 +63,31 @@ public class OpenSignResourceServlet extends OSSBaseServlet {
 			throws ServletException, IOException {
 		
 		load(req, resp);
-
-		String path = req.getRequestURI();
+		
+		_title = "user profile";		
 
 		String property = req.getParameter("property");
 
-		CertificationAuthority ca = CertificationAuthority.getInstance();
-		
-		_title = "user profile";
-		
-		String resourceName = (path.charAt(0) == '/') ? path.substring(1)
-				: path;		
+		CertificationAuthority ca = CertificationAuthority.getInstance();				
+			
 
 		try {
 			if (property == null) {
 				// Send resource profile				
 
-				_content = "Requested resource: " + resourceName;
-
-				Certificate cert = ca.getCertificate(resourceName);
-				if (cert == null)
-					_content += "<br /><br /><br />Resource has no certificate";
-				else
-					_content += "<br /><br /><br />Certificate: <br /><br />" +
-								"<span id=\"certificate\">" +
-							    new String(ca.certificateToPEM(cert)) +
-							    "</span>";
+				_content = "Requested resource: " + _resourceName;
 				
+				buildCertificateBlock();
+								
+				buildSubEntitiesBlock();
 
 				send();
+				
 				return;
 
 			} else if (property.equals("cert")) {
 
-				Certificate cert = ca.getCertificate(resourceName);
+				Certificate cert = ca.getCertificate(_resourceName);
 
 				if (cert == null) {
 					resp.sendError(HttpServletResponse.SC_FORBIDDEN);

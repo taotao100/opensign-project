@@ -23,5 +23,9 @@ public class UserHibernateDao extends GenericHibernateDao<User, Long> implements
 	public List<User> loadIssuers() {
 		return getAll("issuer", true, "resourceName");
 	}
+	
+	public List<User> loadSubEntities(String resourceName) {
+		return getAll("resourcePath", resourceName, "resourceName");
+	}
 
 }

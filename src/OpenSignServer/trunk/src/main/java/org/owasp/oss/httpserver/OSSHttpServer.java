@@ -1,15 +1,12 @@
 package org.owasp.oss.httpserver;
 
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.mortbay.jetty.RequestLog;
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.servlet.Context;
 import org.mortbay.jetty.servlet.DefaultServlet;
 import org.mortbay.jetty.servlet.ServletHolder;
-import org.owasp.oss.ca.CertificationAuthority;
 import org.owasp.oss.ca.UserManager;
 import org.owasp.oss.ca.model.User;
 import org.owasp.oss.util.JettyLogger;
@@ -59,12 +56,13 @@ public class OSSHttpServer {
 		_contextServlets.addServlet(new ServletHolder(new CsrServlet()),
 		"/csr");
 		_contextServlets.addServlet(new ServletHolder(new RegisterServlet()),
-		"/register");		
+		"/register");
+		_contextServlets.addServlet(new ServletHolder(new EditUserProfileServlet()),
+		"/edit_profile");		
 		
+		
+		// During creation of the UserManager all resources are registered
 		List<User> userList = UserManager.getInstance().getAllUsers();
-		Iterator<User> iter = userList.iterator();
-		while (iter.hasNext())
-			registerOsResource("/root/" + iter.next().getUserName());
 
 		_server.start();
 	}
