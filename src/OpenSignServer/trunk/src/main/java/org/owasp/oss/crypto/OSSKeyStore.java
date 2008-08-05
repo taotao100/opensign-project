@@ -149,6 +149,14 @@ public class OSSKeyStore {
 			throw new CryptoException(e);
 		}
 	}
+	
+	public void delete(String alias) throws CryptoException {
+		try {
+		_keyStore.deleteEntry(alias);
+		} catch (Exception e) {
+			throw new CryptoException(e);
+		}
+	}
 
 	private void load() throws CryptoException {
 		try {
