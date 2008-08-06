@@ -15,4 +15,6 @@ public interface UserDao extends GenericDao<User, Long>{
 	
 	public List<User> loadSubEntities(String resourceName);
 
+	public int deleteByUserName(String userName);
+
 }

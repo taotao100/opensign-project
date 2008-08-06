@@ -6,10 +6,9 @@ import java.security.PublicKey;
 import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Vector;
 
 import org.apache.log4j.Logger;
 import org.bouncycastle.asn1.x509.X509Name;
@@ -61,7 +60,7 @@ public class CertificationAuthority {
 
 		init();
 	}
-	
+
 	public void createRoot() {
 		UserManager um = UserManager.getInstance();
 		if (um.getUser(ROOT_KEY_NAME) == null) {
@@ -90,15 +89,28 @@ public class CertificationAuthority {
 		}
 	}
 
-	public void createIssuer(String name)
-			throws CertificationAuthorityException {
-		// TODO: Generate proper cert chain
+	public void createIssuer(User user) throws CertificationAuthorityException {
 		try {
+			// building cert chain
+			UserManager um = UserManager.getInstance();
+			List<User> users = um.getAllUsersInPath(user.getResourcePath());
+			Iterator<User> iter = users.iterator();
+			int chainSize = users.size() + 1;
+			Certificate[] certChain = new Certificate[chainSize];
+			for (int i = chainSize - 1; iter.hasNext(); --i) {
+				User currentUser = iter.next();
+				certChain[i] = _keyStore.getCertificate(currentUser
+						.getResourceName());
+			}
+
+			// generation of issuer
 			KeyPair pair = Crypto.generateKeyPair();
-			Certificate[] certChain = new Certificate[1];
 			certChain[0] = makeCertificate(pair.getPrivate(), pair.getPublic());
-			_keyStore.setKeyEntry(name, pair.getPrivate(), certChain);
+			_keyStore.setKeyEntry(user.getResourceName(), pair.getPrivate(),
+					certChain);
 			_keyStore.store();
+			um.storeUser(user);
+
 		} catch (CryptoException e) {
 			throw new CertificationAuthorityException(e);
 		}
@@ -125,9 +137,8 @@ public class CertificationAuthority {
 			String subjectDN = p.getSubjectName().toString();
 			X509Name subject = new X509Name(subjectDN);
 
-			Certificate cert = makeCertificate(_keyStore
-					.getPrivateKey(user.getResourcePath()), p.getSubjectPublicKeyInfo(),
-					subject);
+			Certificate cert = makeCertificate(_keyStore.getPrivateKey(user
+					.getResourcePath()), p.getSubjectPublicKeyInfo(), subject);
 
 			_keyStore.setCertificateEntry(user.getResourceName(), cert);
 			_keyStore.store();
@@ -249,4 +260,15 @@ public class CertificationAuthority {
 			throw new CertificationAuthorityException("Certificate not found");
 		}
 	}
+
+	public Certificate[] getCertificateChain(String alias)
+			throws CertificationAuthorityException {
+		try {
+			return _keyStore.getCertificateChain(alias);
+		} catch (Exception e) {
+			log.error("No certificate with this alias in key store", e);
+			throw new CertificationAuthorityException("Certificate not found");
+		}
+	}
+
 }

@@ -4,8 +4,6 @@ import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
-import javax.persistence.Query;
-
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
@@ -18,7 +16,7 @@ import org.owasp.oss.ca.dao.GenericDao;
 public abstract class GenericHibernateDao<T, ID extends Serializable>
 		implements GenericDao<T, ID> {
 
-	private Session _session;
+	protected Session _session;
 	private Class<T> _persistentClass;
 
 	public GenericHibernateDao(Session session) {
@@ -37,7 +35,7 @@ public abstract class GenericHibernateDao<T, ID extends Serializable>
 
 	@Override
 	public void delete(T entity) {
-		_session.delete(entity);
+		this._session.delete(entity);
 	}
 
 	@Override
