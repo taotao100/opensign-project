@@ -8,8 +8,8 @@ import junit.framework.TestSuite;
 
 import org.owasp.oss.TestBase;
 import org.owasp.oss.ca.CertificationAuthority;
-import org.owasp.oss.ca.UserManager;
 import org.owasp.oss.ca.model.User;
+import org.owasp.oss.crypto.OSSKeyStore;
 
 public class CertificateAuthorityTest extends TestBase {
 
@@ -39,12 +39,44 @@ public class CertificateAuthorityTest extends TestBase {
 		assertTrue(storeFile.exists());
 		storeFile.delete();
 	}
+	
+	public void testCreateIssuer() throws Exception {
+		CertificationAuthority ca = CertificationAuthority.getInstance();
+
+		User root = new User();
+		root.setUserName("test");
+		root.setResourceName("test");
+		root.setIssuer(true);
+		ca.createIssuer(root);
+		
+		User user1 = new User();		
+		user1.setUserName("user1");
+		user1.setResourceName("test/user1");
+		user1.setResourcePath("test");
+		user1.setIssuer(true);
+		ca.createIssuer(user1);
+		
+		User user2 = new User();		
+		user2.setUserName("user2");
+		user2.setResourceName("test/user1/user2");
+		user2.setResourcePath("test/user1");
+		user2.setIssuer(true);
+		ca.createIssuer(user2);
+
+		Certificate cert2 = ca.getCertificate("test/user1/user2");
+		assertNotNull(cert2);
+		Certificate[] chain = ca.getCertificateChain("test/user1/user2");
+		assertEquals(3, chain.length);		
+	}
 
 	public void testProcessCsr() throws Exception {
 
 		CertificationAuthority ca = CertificationAuthority.getInstance();
 
-		ca.createIssuer("test");		
+		User root = new User();
+		root.setUserName("test");
+		root.setResourceName("test");
+		ca.createIssuer(root);		
 		
 		User user = new User();		
 		user.setUserName("user1");
@@ -55,6 +87,9 @@ public class CertificateAuthorityTest extends TestBase {
 		assertNotNull(cert);
 		// writeFile("cert1.cer", cert.getEncoded());
 	}
+	
+
+	
 
 	// public void testBuildCsr() throws Exception {
 	// // Hashtable<DERObjectIdentifier, String> attrs = new

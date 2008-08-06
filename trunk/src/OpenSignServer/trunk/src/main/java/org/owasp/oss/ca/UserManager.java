@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.StringTokenizer;
+import java.util.Vector;
 
 import org.apache.log4j.Logger;
 import org.hibernate.Transaction;
@@ -52,7 +54,7 @@ public class UserManager {
 		try {
 			CertificationAuthority ca = CertificationAuthority.getInstance();
 			if (user.isIssuer())
-				ca.createIssuer(user.getResourceName());
+				ca.createIssuer(user);
 			OSSHttpServer.getInstance().registerOsResource(
 					user.getResourceName());
 
@@ -70,6 +72,23 @@ public class UserManager {
 		.beginTransaction();
 		_userDao.store(user);
 		tx.commit();
+	}
+	
+	public void deleteUser(User user) {
+		log.info("Deleting user " + user.getUserName());
+		Transaction tx = DaoFactory.getInstance().getSession()
+		.beginTransaction();
+		_userDao.delete(user);
+		tx.commit();
+	}	
+	
+	public int deleteUserByName(String userName) {
+		log.info("Deleting user " + userName);
+		Transaction tx = DaoFactory.getInstance().getSession()
+		.beginTransaction();
+		int rowsAffected = _userDao.deleteByUserName(userName);
+		tx.commit();
+		return rowsAffected;
 	}
 
 	public List<User> getAllUsers() {
@@ -94,5 +113,19 @@ public class UserManager {
 	
 	public List<User> getAllSubEntities(String resourcePath) {
 		return _userDao.loadSubEntities(resourcePath);
+	}
+	
+	public List<User> getAllUsersInPath(String resourcePath) {
+		List<User> users = new Vector<User>();
+		
+		if (resourcePath == null)
+			return users;
+		StringTokenizer st = new StringTokenizer(resourcePath, "/");
+		
+		while (st.hasMoreElements()) {
+			String userName = st.nextToken();
+			users.add(_userDao.loadByUserName(userName));
+		}
+		return users;
 	}
 }

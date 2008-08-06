@@ -107,12 +107,20 @@ public class OSSKeyStore {
 	}
 
 	public Certificate getCertificate(String alias) throws CryptoException {
-		try {
+		try { 
 			return _keyStore.getCertificate(alias);			
 		} catch (Exception e) {
 			throw new CryptoException(e);
 		}
 	}
+	
+	public Certificate[] getCertificateChain(String alias) throws CryptoException {
+		try { 
+			return _keyStore.getCertificateChain(alias);
+		} catch (Exception e) {
+			throw new CryptoException(e);
+		}
+	}	
 
 	public void setKeyEntry(String alias, PrivateKey privKey,
 			Certificate[] chain) throws CryptoException {
