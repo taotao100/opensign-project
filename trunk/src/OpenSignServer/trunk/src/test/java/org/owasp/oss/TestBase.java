@@ -1,5 +1,6 @@
 package org.owasp.oss;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
@@ -8,6 +9,7 @@ import java.security.Security;
 import junit.framework.TestCase;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.owasp.oss.ca.CertificationAuthority;
 
 public class TestBase extends TestCase {
 
@@ -24,6 +26,7 @@ public class TestBase extends TestCase {
 	public TestBase(){
 		Configuration.getInstance().setMode(Configuration.ConfMode.TEST);
 		_testResourcePath = Configuration.getInstance().getResourcePath();
+		new File(CertificationAuthority.getInstance().getKeyStoreFile()).deleteOnExit();
 	}
 
 	public TestBase(String name) {

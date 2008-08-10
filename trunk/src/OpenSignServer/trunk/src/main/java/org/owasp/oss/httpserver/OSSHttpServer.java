@@ -29,7 +29,7 @@ public class OSSHttpServer {
 	public void registerOsResource(String resourceName) {		
 		log.info("Registering OpenSign resource: " + resourceName);
 		_contextServlets.addServlet(new ServletHolder(
-				new OpenSignResourceServlet()), "/" + resourceName);		
+				new OpenSignResourceServlet()), "/" + resourceName);	
 	}
 
 	public void start() throws Exception {

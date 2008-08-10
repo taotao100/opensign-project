@@ -2,15 +2,15 @@ package org.owasp.oss.crypto;
 
 public class CryptoException extends Exception {
 	
-	CryptoException(String message){
+	public CryptoException(String message){
 		super(message);
 	}
     
-	CryptoException(String message, Throwable cause){
+	public CryptoException(String message, Throwable cause){
 		super(message, cause);
 	}
 	
-	CryptoException(Throwable cause){
+	public CryptoException(Throwable cause){
 		super(cause);		
 	}
 }

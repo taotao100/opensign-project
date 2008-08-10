@@ -32,7 +32,7 @@ import org.owasp.oss.crypto.OSSKeyStore;
 public class KeyStoreTest extends TestBase {
 
 	OSSKeyStore _store = null;
-	
+
 	public KeyStoreTest() {
 		try {
 			_store = new OSSKeyStore(_testResourcePath + "testStore.bks",
@@ -55,30 +55,13 @@ public class KeyStoreTest extends TestBase {
 	public static Test suite() {
 		return new TestSuite(KeyStoreTest.class);
 	}
-	
-
-	public void testLoadCertificateFromFile() throws Exception {
-
-		Certificate cert = _store.loadCertificateFromFile(_testResourcePath
-				+ TEST_CERTIFICATE);
-		assertNotNull(cert);
-		FileInputStream fileStream = new FileInputStream(_testResourcePath
-				+ TEST_CERTIFICATE);
-		byte[] fileBytes = new byte[fileStream.available()];
-		fileStream.read(fileBytes);
-		byte[] certBytes = cert.getEncoded();
-
-		for (int i = 0; i < certBytes.length; ++i)
-			if (certBytes[i] != fileBytes[i])
-				assertTrue(false);
-	}
 
 	public void testCreateKeystore() throws Exception {
 
 		KeyPair keyPair = Crypto.generateKeyPair();
 
 		Certificate[] certChain = new Certificate[1];
-		certChain[0] = CertificationAuthority.makeCertificate(keyPair
+		certChain[0] = CertificationAuthority.makeDummyCertificate(keyPair
 				.getPrivate(), keyPair.getPublic());
 
 		_store.setKeyEntry("test1", keyPair.getPrivate(), certChain);
@@ -86,55 +69,53 @@ public class KeyStoreTest extends TestBase {
 		PrivateKey privKey = _store.getPrivateKey("test1");
 		assertEquals(privKey, keyPair.getPrivate());
 	}
-	
+
 	public void testRenewKey() throws Exception {
 		KeyPair keyPair = Crypto.generateKeyPair();
 		Certificate[] certChain = new Certificate[1];
-		certChain[0] = CertificationAuthority.makeCertificate(keyPair
+		certChain[0] = CertificationAuthority.makeDummyCertificate(keyPair
 				.getPrivate(), keyPair.getPublic());
 
 		_store.setKeyEntry("test1", keyPair.getPrivate(), certChain);
 		_store.store();
-		
+
 		assertTrue(_store.getPrivateKey("test1") != null);
-		
+
 		_store.setKeyEntry("test1", keyPair.getPrivate(), certChain);
 		_store.store();
-		
+
 		assertTrue(_store.getPrivateKey("test1") != null);
-		
+
 		assertTrue(_store.getPublicKey("test1") != null);
-		
+
 		assertTrue(_store.getCertificate("test1") != null);
-		
+
 	}
-	
+
 	public void testDeleteKey() throws Exception {
 		KeyPair keyPair = Crypto.generateKeyPair();
 		Certificate[] certChain = new Certificate[1];
-		certChain[0] = CertificationAuthority.makeCertificate(keyPair
+		certChain[0] = CertificationAuthority.makeDummyCertificate(keyPair
 				.getPrivate(), keyPair.getPublic());
 
 		_store.setKeyEntry("test1", keyPair.getPrivate(), certChain);
 		_store.store();
-		
+
 		assertTrue(_store.getPrivateKey("test1") != null);
-		
+
 		_store.setKeyEntry("test1", keyPair.getPrivate(), certChain);
 		_store.store();
 		_store.delete("test1");
-		
+
 		try {
 			_store.getPrivateKey("test1");
 			assertTrue(false);
 		} catch (Exception e) {
 
 		}
-		
-		
-	}	
-	
-	
+
+	}
+
 	public void genericKeyStoreTest(KeyStore store, String name, KeyPair kp,
 			Certificate[] certChain, String keyPass, String storePass)
 			throws Exception {
@@ -156,39 +137,40 @@ public class KeyStoreTest extends TestBase {
 		new File(name).delete();
 	}
 
-	// This test is only for testing key store implementations and is not relevant for the system
+	// This test is only for testing key store implementations and is not
+	// relevant for the system
 	public void testKeyStoreFormat() {
-//		try {
-//			KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA", "BC");
-//			kpg.initialize(1024);
-//			KeyPair kp = kpg.generateKeyPair();
-//			// creating a self-signed certificate
-//			Certificate[] certChain = new Certificate[1];
-//			certChain[0] = CertificationAuthority.makeCertificate(kp
-//					.getPrivate(), kp.getPublic());
-//
-//			KeyStore store = KeyStore.getInstance("JKS", "SUN");
-//			genericKeyStoreTest(store, "keystore.jks", kp, certChain,
-//					"keypass", "storepass");
-//			store = KeyStore.getInstance("JCEKS", "SunJCE");
-//			genericKeyStoreTest(store, "keystore.jceks", kp, certChain,
-//					"keypass", "storepass");
-//			store = KeyStore.getInstance("PKCS12", "SunJSSE");
-//			genericKeyStoreTest(store, "keystore.sun.p12", kp, certChain,
-//					"keypass", "storepass");
-//			store = KeyStore.getInstance("BKS", "BC");
-//			genericKeyStoreTest(store, "keystore.bks", kp, certChain,
-//					"keypass", "storepass");
-//
-//			// don't support a different key/key-store password:
-//			store = KeyStore.getInstance("PKCS12", "BC");
-//			genericKeyStoreTest(store, "keystore.bc.p12", kp, certChain,
-//					"pass", "pass");
-//			store = KeyStore.getInstance("UBER");
-//			genericKeyStoreTest(store, "keystore.uber", kp, certChain, "pass",
-//					"pass");
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-	}	
+		// try {
+		// KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA", "BC");
+		// kpg.initialize(1024);
+		// KeyPair kp = kpg.generateKeyPair();
+		// // creating a self-signed certificate
+		// Certificate[] certChain = new Certificate[1];
+		// certChain[0] = CertificationAuthority.makeCertificate(kp
+		// .getPrivate(), kp.getPublic());
+		//
+		// KeyStore store = KeyStore.getInstance("JKS", "SUN");
+		// genericKeyStoreTest(store, "keystore.jks", kp, certChain,
+		// "keypass", "storepass");
+		// store = KeyStore.getInstance("JCEKS", "SunJCE");
+		// genericKeyStoreTest(store, "keystore.jceks", kp, certChain,
+		// "keypass", "storepass");
+		// store = KeyStore.getInstance("PKCS12", "SunJSSE");
+		// genericKeyStoreTest(store, "keystore.sun.p12", kp, certChain,
+		// "keypass", "storepass");
+		// store = KeyStore.getInstance("BKS", "BC");
+		// genericKeyStoreTest(store, "keystore.bks", kp, certChain,
+		// "keypass", "storepass");
+		//
+		// // don't support a different key/key-store password:
+		// store = KeyStore.getInstance("PKCS12", "BC");
+		// genericKeyStoreTest(store, "keystore.bc.p12", kp, certChain,
+		// "pass", "pass");
+		// store = KeyStore.getInstance("UBER");
+		// genericKeyStoreTest(store, "keystore.uber", kp, certChain, "pass",
+		// "pass");
+		// } catch (Exception e) {
+		// e.printStackTrace();
+		// }
+	}
 }

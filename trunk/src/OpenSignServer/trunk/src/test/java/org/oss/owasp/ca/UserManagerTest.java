@@ -8,16 +8,18 @@ import junit.framework.TestSuite;
 import org.owasp.oss.TestBase;
 import org.owasp.oss.ca.UserManager;
 import org.owasp.oss.ca.model.User;
+import org.owasp.oss.httpserver.OSSHttpServer;
 
 public class UserManagerTest extends TestBase {
-
+	
 	protected void setUp() throws Exception {
 		super.setUp();
+		OSSHttpServer.getInstance().start();
 	}
 
 	protected void tearDown() throws Exception {
 		super.tearDown();
-
+		OSSHttpServer.getInstance().stop();
 	}
 
 	public static Test suite() {
@@ -57,13 +59,7 @@ public class UserManagerTest extends TestBase {
 	
 	public void testGetAllUserInPath() {
 		UserManager um = UserManager.getInstance();
-		
-		User root = new User();
-		root.setUserName("root");
-		root.setResourceName("root");
-		root.setResourcePath("");
-		um.storeUser(root);
-		
+			
 		User test1 = new User();
 		test1.setUserName("test1");
 		test1.setResourceName("root/test1");
@@ -78,7 +74,7 @@ public class UserManagerTest extends TestBase {
 		
 		List<User> users = um.getAllUsersInPath("root/test1/test2");
 		assertNotNull(users);
-		assertTrue(users.get(0).getUserName().equals(root.getUserName()));
+		assertTrue(users.get(0).getUserName().equals("root"));
 		assertTrue(users.get(1).getUserName().equals(test1.getUserName()));
 		assertTrue(users.get(2).getUserName().equals(test2.getUserName()));
 	}
