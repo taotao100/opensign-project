@@ -21,8 +21,11 @@ import org.owasp.oss.httpserver.OSSHttpServer;
  * Class for managing users within the system
  */
 public class UserManager {
-	
+
 	private static Logger log = Logger.getLogger(UserManager.class);
+
+	private static final String ROOT_NAME = "root";
+	private static final String ROOT_PASSWORD = "123";
 
 	static UserManager _instance = new UserManager();
 	DaoFactory daoFactory = DaoFactory.getInstance();
@@ -38,13 +41,38 @@ public class UserManager {
 
 	private void init() {
 		log.info("Initializing UserManager");
-		List<User> users = _userDao.getAll();
-		Iterator<User> iter = users.iterator();
-		while (iter.hasNext()) {
-			User user = iter.next();
-			registerUser(user);
+		User root = _userDao.loadByUserName(ROOT_NAME);
+		if (root == null) {
+			createRoot();
+		} else {
+			List<User> users = _userDao.getAll();
+			Iterator<User> iter = users.iterator();
+			while (iter.hasNext()) {
+				User user = iter.next();
+				registerUser(user);
+			}
 		}
+	}
 
+	public void createRoot() {
+		User root = new User();
+		root.setUserName(ROOT_NAME);
+		root.setPassword(ROOT_PASSWORD);
+		root.setResourceName(ROOT_NAME);		
+		root.setIssuer(true);		
+
+		log.info("User root registering");
+		Transaction tx = DaoFactory.getInstance().getSession()
+				.beginTransaction();
+		try {
+			CertificationAuthority.getInstance().createRoot(ROOT_NAME);
+			OSSHttpServer.getInstance().registerOsResource(ROOT_NAME);
+			_userDao.store(root);
+			tx.commit();
+		} catch (CertificationAuthorityException e) {
+			tx.rollback();
+			log.error("User root could not register", e);
+		}
 	}
 
 	public void registerUser(User user) {
@@ -57,35 +85,35 @@ public class UserManager {
 				ca.createIssuer(user);
 			OSSHttpServer.getInstance().registerOsResource(
 					user.getResourceName());
-
+			
 			_userDao.store(user);
 			tx.commit();
 		} catch (CertificationAuthorityException e) {
 			tx.rollback();
-			log.error("User " + user.getUserName() + " could not register", e);			
+			log.error("User " + user.getUserName() + " could not register", e);
 		}
 	}
-	
+
 	public void storeUser(User user) {
 		log.info("Storing user " + user.getUserName());
 		Transaction tx = DaoFactory.getInstance().getSession()
-		.beginTransaction();
+				.beginTransaction();
 		_userDao.store(user);
 		tx.commit();
 	}
-	
+
 	public void deleteUser(User user) {
 		log.info("Deleting user " + user.getUserName());
 		Transaction tx = DaoFactory.getInstance().getSession()
-		.beginTransaction();
+				.beginTransaction();
 		_userDao.delete(user);
 		tx.commit();
-	}	
-	
+	}
+
 	public int deleteUserByName(String userName) {
 		log.info("Deleting user " + userName);
 		Transaction tx = DaoFactory.getInstance().getSession()
-		.beginTransaction();
+				.beginTransaction();
 		int rowsAffected = _userDao.deleteByUserName(userName);
 		tx.commit();
 		return rowsAffected;
@@ -110,18 +138,18 @@ public class UserManager {
 		}
 		return false;
 	}
-	
+
 	public List<User> getAllSubEntities(String resourcePath) {
 		return _userDao.loadSubEntities(resourcePath);
 	}
-	
+
 	public List<User> getAllUsersInPath(String resourcePath) {
 		List<User> users = new Vector<User>();
-		
+
 		if (resourcePath == null)
 			return users;
 		StringTokenizer st = new StringTokenizer(resourcePath, "/");
-		
+
 		while (st.hasMoreElements()) {
 			String userName = st.nextToken();
 			users.add(_userDao.loadByUserName(userName));

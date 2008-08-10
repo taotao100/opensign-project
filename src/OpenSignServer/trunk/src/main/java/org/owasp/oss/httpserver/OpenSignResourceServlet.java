@@ -12,18 +12,20 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.owasp.oss.ca.CertificationAuthority;
 import org.owasp.oss.ca.CertificationAuthorityException;
 import org.owasp.oss.ca.UserManager;
 import org.owasp.oss.ca.model.User;
+import org.owasp.oss.util.CertificateUtil;
 
 public class OpenSignResourceServlet extends OSSBaseServlet {
 	
 	private static Logger log = Logger.getLogger(OpenSignResourceServlet.class);
 	
-	private void buildCertificateBlock() throws CertificationAuthorityException {
+	private void buildCertificateBlock() throws CertificationAuthorityException, CertificateEncodingException {
 		
 		CertificationAuthority ca = CertificationAuthority.getInstance();
 		Certificate cert = ca.getCertificate(_resourceName);
@@ -32,7 +34,7 @@ public class OpenSignResourceServlet extends OSSBaseServlet {
 		else
 			_content += "<br /><br /><br />Certificate: <br /><br />" +
 						"<span id=\"certificate\">" +
-					    new String(ca.certificateToPEM(cert)) +
+					    new String(CertificateUtil.certificateToPEM(cert)) +
 					    "</span>";
 	}
 	
@@ -101,7 +103,7 @@ public class OpenSignResourceServlet extends OSSBaseServlet {
 				if (format != null) {
 					if (format.equals("PEM")) {
 						resp.setContentType("text/plain");
-						respBody.write(ca.certificateToPEM(cert));
+						respBody.write(CertificateUtil.certificateToPEM(cert));
 						respBody.flush();
 						return;
 					}
@@ -120,6 +122,24 @@ public class OpenSignResourceServlet extends OSSBaseServlet {
 			resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
 		}
 	}
+	
+	private boolean login(HttpServletRequest req) throws IOException {
+	
+		String userName = req.getParameter("user_name");
+		String password = req.getParameter("password");
+		if (userName != null || password != null) {
+			User user = UserManager.getInstance().getUser(userName);
+			if (user != null) {
+				if (user.getPassword().equals(password)) {
+					_user = user;
+					_userName = userName;
+					log.info("User " + _userName + " has logged in");
+					return true;
+				}
+			}			
+		} 
+		return false;
+	}	
 
 	/*
 	 * (non-Javadoc)
@@ -137,8 +157,9 @@ public class OpenSignResourceServlet extends OSSBaseServlet {
 		try {
 
 			_title = "Issue CSR";
+			
+			login(req);
 
-			this.load(req, resp);
 			if (!isUserSet())
 				return;
 
@@ -173,7 +194,7 @@ public class OpenSignResourceServlet extends OSSBaseServlet {
 			if (format != null) {
 				if (format.equals("PEM")) {
 					resp.setContentType("text/plain");
-					respBody.write(ca.certificateToPEM(cert));
+					respBody.write(CertificateUtil.certificateToPEM(cert));
 					respBody.flush();
 					return;
 				}
@@ -190,5 +211,4 @@ public class OpenSignResourceServlet extends OSSBaseServlet {
 			resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
 		}
 	}
-
 }

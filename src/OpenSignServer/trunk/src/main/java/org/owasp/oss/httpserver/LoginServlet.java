@@ -1,6 +1,7 @@
 package org.owasp.oss.httpserver;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -14,6 +15,32 @@ import org.owasp.oss.ca.model.User;
 public class LoginServlet extends OSSBaseServlet {
 
 	private static Logger log = Logger.getLogger(OpenSignResourceServlet.class);
+	
+	private boolean login(HttpServletRequest req) throws IOException {
+		HttpSession session = req.getSession();
+		String userName = req.getParameter("user_name");
+		String password = req.getParameter("password");
+		if (userName != null || password != null) {
+			// New login attempt
+			User user = UserManager.getInstance().getUser(userName);
+			if (user != null) {
+				if (user.getPassword() != null && user.getPassword().equals(password)) {
+					session.setAttribute("user", user);
+					
+					_user = user;
+					_userName = userName;
+					_content = "Successfully logged in!";
+					_title = "Login";
+					
+					log.info("User " + _userName + " has logged in");
+					
+					return true;
+				}
+			}			
+		} 
+		return false;
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -30,7 +57,7 @@ public class LoginServlet extends OSSBaseServlet {
 		HttpSession session = req.getSession();
 		String userName = req.getParameter("user_name");
 		String password = req.getParameter("password");					
-		
+
 		if (userName != null || password != null) {
 			// New login attempt
 			User user = UserManager.getInstance().getUser(userName);
@@ -53,7 +80,7 @@ public class LoginServlet extends OSSBaseServlet {
 		
 		resp.sendRedirect("error.html");
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see javax.servlet.http.HttpServlet#doGet(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
 	 */
@@ -62,6 +89,10 @@ public class LoginServlet extends OSSBaseServlet {
 			throws ServletException, IOException {
 		
 		load(req, resp);
+		
+		// TODO: remove
+		if (login(req))
+			return;
 		
 		_title = "Login";
 		

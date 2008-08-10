@@ -90,5 +90,4 @@ public class Configuration {
 		log.info("Reloading configuration: " + CONFIGURATION_FILES_PATH + fileName);
 		_properties.load(new FileInputStream(CONFIGURATION_FILES_PATH + fileName));
 	}
-
 }

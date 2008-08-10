@@ -37,4 +37,12 @@ public class UserHibernateDao extends GenericHibernateDao<User, Long> implements
         return query.executeUpdate();
 	}
 
+	@Override
+	public User store(User entity) {
+		User userToUpdate = loadByUserName(entity.getUserName());
+		if (userToUpdate != null)
+			entity.setId(userToUpdate.getId());
+		return super.store(entity);
+	}
+
 }

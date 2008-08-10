@@ -6,17 +6,49 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.owasp.oss.ca.CertificationAuthority;
 
 /**
- * Class providing functionality to communicate with a RESTful server architecture
+ * Class providing functionality to communicate with a RESTful server
+ * architecture
  */
 public class RESTClient {
-	
+
 	private static Logger log = Logger.getLogger(RESTClient.class);
+	
+	private String _sessionId;
+	
+	private boolean _sessionOpen = false;
+		
+	public boolean isSessionOpen() {
+		return _sessionOpen;
+	}
+	
+	private void parseHeader(HttpURLConnection conn) {
+		Map<String, List<String>> h = conn.getHeaderFields();
+		Set<String> k = h.keySet();
+		Iterator<String> i = k.iterator();
+		while (i.hasNext()) {
+			String key = i.next();
+			System.out.println(key);
+			
+			if (key != null && key.equals("Set-Cookie")) {
+				_sessionId = h.get(key).get(0); //JSESSIONID=1is0rzuw6ki1g;Path=/ - Set-Cookie
+				_sessionOpen = true;
+			}
+			
+			List<String> l = h.get(key);
+			Iterator<String> il = l.iterator();
+			while (il.hasNext()) {
+				System.out.println(il.next());
+			}
+		}
+	}
 
 	/**
 	 * Retrieve a resource by issuing a GET request.
@@ -26,7 +58,7 @@ public class RESTClient {
 	 * @return An array of bytes of the request contents or null
 	 * @throws IOException
 	 */
-	public static byte[] doGET(URL url) {
+	public byte[] doGET(URL url) {
 		byte[] response = null;
 		HttpURLConnection conn = null;
 
@@ -38,21 +70,26 @@ public class RESTClient {
 			conn.setRequestProperty("Content-Type", "application/octet-stream");
 			conn.setRequestProperty("Content-Transfer-Encoding", "binary");
 			conn.setRequestProperty("accept", "application/octet-stream");
+			if (_sessionOpen)
+				conn.setRequestProperty("Cookie", _sessionId);
 
 			conn.connect();
 
 			if (conn.getResponseCode() == 200) {
-				System.out.println("Response code: " + conn.getResponseCode() + " (" + conn.getResponseMessage() + ")");
-
+				System.out.println("Response code: " + conn.getResponseCode()
+						+ " (" + conn.getResponseMessage() + ")");
+				parseHeader(conn);
 				response = getRequestBytes(conn.getInputStream());
+
 			} else {
-				System.out.println("Response code: " + conn.getResponseCode() + " (" + conn.getResponseMessage() + ")");
+				System.out.println("Response code: " + conn.getResponseCode()
+						+ " (" + conn.getResponseMessage() + ")");
 			}
 		} catch (IOException e) {
 			System.out.println("GET failed!" + e);
 		} finally {
-			if (conn != null)
-				conn.disconnect();
+			//if (conn != null)
+				//conn.disconnect();
 		}
 
 		return response;
@@ -63,11 +100,12 @@ public class RESTClient {
 	 * 
 	 * @param url
 	 *            The URL of the resource to retrieve
-	 * @param body Content which is sent to URL           
+	 * @param body
+	 *            Content which is sent to URL
 	 * @return An array of bytes of the request contents or null
 	 * @throws IOException
-	 */	
-	public static byte[] doPost(URL url, byte[] body) {
+	 */
+	public byte[] doPost(URL url, byte[] body) {
 		byte[] response = null;
 
 		HttpURLConnection conn = null;
@@ -81,18 +119,24 @@ public class RESTClient {
 			conn.setRequestProperty("Content-Type", "application/octet-stream");
 			conn.setRequestProperty("Content-Transfer-Encoding", "binary");
 			conn.setRequestProperty("accept", "application/octet-stream");
-
+			if (_sessionOpen)
+				conn.setRequestProperty("Cookie", _sessionId);
+			
 			conn.connect();
-
+			
 			OutputStream post_data = conn.getOutputStream();
 			post_data.write(body);
 			post_data.close();
+			
 
 			if (conn.getResponseCode() == 200) {
-				System.out.println("Response code: " + conn.getResponseCode() + " (" + conn.getResponseMessage() + ")");
+				System.out.println("Response code: " + conn.getResponseCode()
+						+ " (" + conn.getResponseMessage() + ")");
+				parseHeader(conn);
 				response = getRequestBytes(conn.getInputStream());
 			} else {
-				System.out.println("Response code: " + conn.getResponseCode() + " (" + conn.getResponseMessage() + ")");
+				System.out.println("Response code: " + conn.getResponseCode()
+						+ " (" + conn.getResponseMessage() + ")");
 			}
 		} catch (IOException e) {
 			System.out.println("Error while sending POST " + e);
@@ -112,7 +156,8 @@ public class RESTClient {
 	 * @return An array of bytes of the request contents or null
 	 * @throws IOException
 	 */
-	public static byte[] getRequestBytes(InputStream request_stream) throws IOException {
+	public static byte[] getRequestBytes(InputStream request_stream)
+			throws IOException {
 		if (request_stream == null) {
 			return null;
 		}
@@ -122,7 +167,8 @@ public class RESTClient {
 
 		int bytes_read = 0;
 
-		ByteArrayOutputStream byte_array_stream = new ByteArrayOutputStream(buffer_size * 2);
+		ByteArrayOutputStream byte_array_stream = new ByteArrayOutputStream(
+				buffer_size * 2);
 
 		try {
 			while ((bytes_read = request_stream.read(byte_buffer)) != -1) {

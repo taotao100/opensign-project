@@ -25,8 +25,8 @@ public class OSSMain {
 	
 	private static Configuration conf = Configuration.getInstance();
 	
-	private static final SessionFactory sessionFactory = new AnnotationConfiguration()
-	.configure().buildSessionFactory();
+//	private static final SessionFactory sessionFactory = new AnnotationConfiguration()
+//	.configure().buildSessionFactory();
 	
 	public static void main(String[] args) {
 
@@ -39,11 +39,13 @@ public class OSSMain {
 
 		try {
 			openSignServer.start();
-			CertificationAuthority.getInstance().createRoot();
+
+			if (conf.getValue("STORAGE_TYPE").equals("MEMORY"));
+				new File(CertificationAuthority.getInstance().getKeyStoreFile()).deleteOnExit();
+
 			System.out.println("Press enter to quit server");
 			new BufferedReader(new InputStreamReader(System.in)).readLine();
-			openSignServer.stop();
-
+			openSignServer.stop();			
 		} catch (Exception e) {
 			log.error("OpenSign server terminated in an unexpected manner", e);
 		}

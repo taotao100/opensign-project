@@ -99,16 +99,6 @@ public class DaoTest extends TestBase {
 		assertTrue(issuers.size() == 2);
 	}
 	
-	public void testDeleteEntity() {
-		DaoFactory factory = DaoFactory.getInstance();
-		UserDao userDao = factory.getUserDao();
-		User user1 = userDao.loadByUserName("userName1");
-		Transaction tx = factory.getSession().beginTransaction();
-		userDao.delete(user1);
-		tx.commit();
-		// need to check db because references to the object are not deleted
-	}
-	
 	public void testLoadSubEntities() {
 		DaoFactory factory = DaoFactory.getInstance();
 		UserDao userDao = factory.getUserDao();
@@ -118,4 +108,14 @@ public class DaoTest extends TestBase {
 		assertTrue(users.get(1).getUserName().equals("userName2"));
 		assertTrue(users.get(2).getUserName().equals("userName3"));
 	}
+	
+	public void testDeleteEntity() {
+		DaoFactory factory = DaoFactory.getInstance();
+		UserDao userDao = factory.getUserDao();
+		User user1 = userDao.loadByUserName("userName1");
+		Transaction tx = factory.getSession().beginTransaction();
+		userDao.delete(user1);
+		tx.commit();
+		// need to check db because references to the object are not deleted
+	}	
 }
