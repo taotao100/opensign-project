@@ -23,12 +23,17 @@ public class CommandGetCertificate extends CommandBase implements CommandInterfa
 			String certName = parameters.get("c");
 			String format = parameters.get("f");
 			String outPutMethod = parameters.get("o");
+			
+			if (certName.length() < 1) {
+				this.printHelp();
+				return;
+			}
 
-			if (format == null || format.equalsIgnoreCase("PEM"))
+			if (format == null || format.equalsIgnoreCase("bin"))
+				format = "bin";
+
+			if (format.equalsIgnoreCase("PEM"))
 				format = "PEM";
-
-			if (format.equalsIgnoreCase("binary"))
-				format = "binary";
 
 			RESTClient client = new RESTClient();
 			URL url = new URL(OS_HOST + certName
@@ -48,6 +53,9 @@ public class CommandGetCertificate extends CommandBase implements CommandInterfa
 
 	@Override
 	public void printHelp() {
+		System.out.println("-c\tcert name");
+		System.out.println("-f\tformat");
+		System.out.println("-o\toutput method");
 	}
 
 }

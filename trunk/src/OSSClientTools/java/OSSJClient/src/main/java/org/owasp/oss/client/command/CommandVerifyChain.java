@@ -63,7 +63,13 @@ public class CommandVerifyChain extends CommandBase implements CommandInterface 
 			while (true) {				
 				X509Certificate issuer = getCertificate(issuerName);
 				System.out.println(issuer);
-				certToVerify.verify(issuer.getPublicKey());
+				
+				try {
+					certToVerify.verify(issuer.getPublicKey());
+				} catch (Exception e) {
+					System.out.println("Certificate could not be verified");
+					break;
+				}
 				System.out.println("Success");
 				String nextIssuerName = getIssuerName(issuer);
 				if (nextIssuerName.equals(issuerName))
