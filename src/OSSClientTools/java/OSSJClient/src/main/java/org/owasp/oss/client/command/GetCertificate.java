@@ -10,7 +10,7 @@ import java.util.Map;
 
 import org.owasp.oss.client.RESTClient;
 
-public class CommandGetCertificate extends CommandBase implements CommandInterface {
+public class GetCertificate extends CommandBase implements CommandInterface {
 
 	@Override
 	public String getDescription() {
