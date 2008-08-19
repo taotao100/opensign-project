@@ -37,10 +37,18 @@ public class OSSJClientMain {
 		return parameter;
 	}
 	
+	public static void printUsage() {
+		System.out.println("Usage:");
+	}
+	
 	public static void main(String[] args) {
 		System.out.println("Opensign Java Client Tool started");
 		init();
 		
+		if (args.length < 1) {
+			printUsage();
+			return;
+		}
 		CommandInterface command = _commands.get(args[0]);
 		
 		if (command != null) {

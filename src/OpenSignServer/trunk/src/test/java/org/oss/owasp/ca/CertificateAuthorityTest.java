@@ -3,7 +3,6 @@ package org.oss.owasp.ca;
 import java.io.File;
 import java.io.FileInputStream;
 import java.security.cert.Certificate;
-import java.security.cert.CertificateFactory;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
@@ -12,7 +11,6 @@ import org.owasp.oss.TestBase;
 import org.owasp.oss.ca.CertificationAuthority;
 import org.owasp.oss.ca.UserManager;
 import org.owasp.oss.ca.model.User;
-import org.owasp.oss.crypto.OSSKeyStore;
 import org.owasp.oss.httpserver.OSSHttpServer;
 import org.owasp.oss.util.CertificateUtil;
 
