@@ -6,12 +6,8 @@
   <fileSets>
     <fileSet>
       <includes>
-        <include>conf/</include>
-		<include>log/</include>
-        <include>www/</include>
         <include>resources/</include>
-        <include>run.bat</include>
-        <include>readme_src.txt</include>
+        <include>run.bat</include>        
         <include>readme.txt</include>
       </includes>
     </fileSet>  
