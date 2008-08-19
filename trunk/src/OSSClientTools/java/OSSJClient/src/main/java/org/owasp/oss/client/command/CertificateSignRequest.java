@@ -6,7 +6,7 @@ import java.util.Map;
 
 import org.owasp.oss.client.RESTClient;
 
-public class CommandCertificateSignRequest extends CommandBase implements CommandInterface {
+public class CertificateSignRequest extends CommandBase implements CommandInterface {
 	
 	@Override
 	public String getDescription() {
@@ -16,18 +16,20 @@ public class CommandCertificateSignRequest extends CommandBase implements Comman
 	@Override
 	public void execute(Map<String, String> parameters) {		
 		try {
+			
+			String csr = parameters.get("c");
+			String issuer = parameters.get("i");			
+			String password = parameters.get("p");
+			String user_name = parameters.get("u");
+			
 			String format = parameters.get("f");
 			String outPutMethod = parameters.get("o");
-			String issuer = parameters.get("i");
-			String user_name = parameters.get("u");
-			String password = parameters.get("p");
-			String csr = parameters.get("c");
 			
-			if (format == null || format.equalsIgnoreCase("PEM"))
+			if (format == null || format.equalsIgnoreCase("BIN"))
+				format = "BIN";
+			
+			if ( format.equalsIgnoreCase("PEM"))
 				format = "PEM";
-
-			if (format.equalsIgnoreCase("binary"))
-				format = "binary";
 
 			RESTClient client = new RESTClient();
 			URL url = new URL(OS_HOST + issuer 
@@ -49,9 +51,14 @@ public class CommandCertificateSignRequest extends CommandBase implements Comman
 
 	@Override
 	public void printHelp() {
-		System.out.println("-u [user name]");
-		System.out.println("-p [password]");
-
+		System.out.println("Mandatory:");
+		System.out.println("\t-i [issuer]\te.g \"root/user1/user2\"");		
+		System.out.println("\t-c [csr file]\tpath and name of csr file (must be in binary PKCS#10 formatted)");		
+		System.out.println("\t-p [password]");
+		System.out.println("\t-u [user name]");
+		System.out.println("Optional:");
+		System.out.println("\t-f [format]\t\"bin\" or \"pem\" whereas \"pem\" is default");
+		System.out.println("\t-o [out put method]\t\"console\" or \"file\"");
 	}
 
 }

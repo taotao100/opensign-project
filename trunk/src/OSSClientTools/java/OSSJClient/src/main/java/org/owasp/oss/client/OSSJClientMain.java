@@ -7,9 +7,9 @@ import java.util.Map;
 import java.util.Set;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
-import org.owasp.oss.client.command.CommandCertificateSignRequest;
-import org.owasp.oss.client.command.CommandGetCertificate;
-import org.owasp.oss.client.command.CommandVerifyChain;
+import org.owasp.oss.client.command.CertificateSignRequest;
+import org.owasp.oss.client.command.GetCertificate;
+import org.owasp.oss.client.command.VerifyChain;
 import org.owasp.oss.client.command.CommandInterface;
 
 public class OSSJClientMain {
@@ -21,9 +21,9 @@ public class OSSJClientMain {
 		Security.addProvider(new BouncyCastleProvider());
 		
 		_commands  = new HashMap<String, CommandInterface>();
-		_commands.put("csr", new CommandCertificateSignRequest());
-		_commands.put("getcert", new CommandGetCertificate());
-		_commands.put("verifycert", new CommandVerifyChain());
+		_commands.put("csr", new CertificateSignRequest());
+		_commands.put("getcert", new GetCertificate());
+		_commands.put("verifycert", new VerifyChain());
 	}
 	
 	private static Map<String, String> buildParameterMap(String[] args) {

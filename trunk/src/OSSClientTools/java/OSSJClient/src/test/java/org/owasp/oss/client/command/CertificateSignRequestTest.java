@@ -6,17 +6,20 @@ import java.util.Map;
 
 import org.owasp.oss.TestBase;
 
-public class GetCertificateTest extends TestBase {
+public class CertificateSignRequestTest extends TestBase {
 	
-	public void testGetCertificate() throws Exception {
-		GetCertificate command = new GetCertificate();
+	public void testSignRequest() throws Exception {
+		CommandInterface command = new CertificateSignRequest();
 		System.out.println(command.getDescription());
 		command.printHelp();
 		Map<String, String> params = new HashMap<String, String>();
-		params.put("c", "root");
-		// Writes certificate to a binary file named "root.bin.cer" as default
+		params.put("i", "root");
+		params.put("c", "csr1.pem");
+		params.put("p", "123");
+		params.put("u", "user1");		
+		// Writes certificate to a binary file named "user1.bin.cer" as default
 		command.execute(params);
-		InputStream ins = loadFile("root.bin.cer");
+		InputStream ins = loadFile("user1.bin.cer");
 		assertNotNull(ins);		
 		params.put("o", "console");
 		params.put("f", "pem");

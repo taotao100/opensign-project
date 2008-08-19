@@ -13,7 +13,7 @@ import javax.security.cert.Certificate;
 import org.bouncycastle.jce.X509Principal;
 import org.owasp.oss.client.RESTClient;
 
-public class CommandVerifyChain extends CommandBase implements CommandInterface {
+public class VerifyChain extends CommandBase implements CommandInterface {
 
 	X509Certificate buildCertificate(byte[] certBytes) throws Exception {
 		CertificateFactory factory = CertificateFactory.getInstance("X.509",
