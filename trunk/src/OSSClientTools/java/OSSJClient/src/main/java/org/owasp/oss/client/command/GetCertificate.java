@@ -14,17 +14,17 @@ public class GetCertificate extends CommandBase implements CommandInterface {
 
 	@Override
 	public String getDescription() {
-		return "CommandGetCertificate";
+		return "Retrieval of an OpenSign certificate";
 	}
 
 	@Override
 	public void execute(Map<String, String> parameters) {
 		try {
-			String certName = parameters.get("c");
+			String certName = parameters.get("r");
 			String format = parameters.get("f");
 			String outPutMethod = parameters.get("o");
 			
-			if (certName.length() < 1) {
+			if (certName == null) {
 				this.printHelp();
 				return;
 			}
@@ -53,9 +53,12 @@ public class GetCertificate extends CommandBase implements CommandInterface {
 
 	@Override
 	public void printHelp() {
-		System.out.println("-c\tcert name");
-		System.out.println("-f\tformat");
-		System.out.println("-o\toutput method");
+		System.out.println("Command getcert takes following parameter:");
+		System.out.println("\tMandatory:");	
+		System.out.println("\t\t-r [certificate resource name]\te.g \"root/user1/user2\"");		
+		System.out.println("\tOptional:");
+		System.out.println("\t\t-f [response format]\t\"bin\" or \"pem\" whereas \"pem\" is default");
+		System.out.println("\t\t-o [out put method]\t\"console\" or \"file\"");
 	}
 
 }

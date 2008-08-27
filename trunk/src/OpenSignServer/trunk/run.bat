@@ -1,5 +1,5 @@
 @echo off
 
-java.exe -jar jar\OpenSignServer-0.3.jar
+java.exe -jar jar\OpenSignServer-0.4.jar
 
 pause

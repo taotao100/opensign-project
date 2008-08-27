@@ -38,14 +38,10 @@ brief overview of supported features is given.
 
 == Supported Features ==
 
-  o Easy extendable persistence layer, which is set up using Hibernate – 
-    Annotations.
-	o Possibility to run server in memory, whereas data is lost when the server 
-    process is terminated, or to run the server on top of a MYSQL database.
-	o Logging mechanism got enhanced which involves means to pipe the log 
-    information from OpenSign server as well as from Jetty and Hibernate to a 
-    log file.
-	o Same functionality as version 0.2 from a user point of view. Please consult:
-	  https://www.owasp.org/index.php/Project_Information:template_OpenSign_Server_Project
-	  for further information.  
+    o Certificate chains are now set up properly. This includes the right values 
+      in the certificate as well as appropriate key-handling of the key store.        
+      Dummy code got removed broadly. 
+  	o This version supports the use of OSSJClient version 0.9 for commands 
+  	  "getcert", "verifycert" and "csr" 
+  
 

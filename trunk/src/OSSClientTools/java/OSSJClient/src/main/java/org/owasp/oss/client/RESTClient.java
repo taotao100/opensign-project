@@ -78,8 +78,8 @@ public class RESTClient {
 				response = getRequestBytes(conn.getInputStream());
 
 			} else {
-				System.out.println("Response code: " + conn.getResponseCode()
-						+ " (" + conn.getResponseMessage() + ")");
+//				System.out.println("Response code: " + conn.getResponseCode()
+//						+ " (" + conn.getResponseMessage() + ")");
 			}
 		} catch (IOException e) {
 			System.out.println("GET failed!" + e);

@@ -6,6 +6,10 @@ import java.util.Map;
 
 import org.owasp.oss.TestBase;
 
+/**
+ * Requirements for this test case:
+ *  - OpenSign server must run at localhost:8080 
+ */
 public class GetCertificateTest extends TestBase {
 	
 	public void testGetCertificate() throws Exception {
