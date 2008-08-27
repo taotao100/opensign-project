@@ -38,7 +38,14 @@ public class OSSJClientMain {
 	}
 	
 	public static void printUsage() {
-		System.out.println("Usage:");
+		System.out.println("Usage: run.bat [command]");
+		System.out.println("Following commads supported:");
+		Set<String> keys = _commands.keySet();
+		Iterator<String> i = keys.iterator();
+		while (i.hasNext()) {
+			String key = i.next();
+			System.out.println("\t" + key + " - " + _commands.get(key).getDescription());
+		}
 	}
 	
 	public static void main(String[] args) {
@@ -54,12 +61,7 @@ public class OSSJClientMain {
 		if (command != null) {
 			command.execute(buildParameterMap(args));
 		} else {
-			Set<String> keys = _commands.keySet();
-			Iterator<String> i = keys.iterator();
-			while (i.hasNext()) {
-				String key = i.next();
-				System.out.println(key + " - " + _commands.get(key).getDescription());
-			}
+			printUsage();
 		}
 		
 	}

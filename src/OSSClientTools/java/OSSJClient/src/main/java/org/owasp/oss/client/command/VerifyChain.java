@@ -46,15 +46,18 @@ public class VerifyChain extends CommandBase implements CommandInterface {
 
 	@Override
 	public String getDescription() {
-		return "CommandGetCertificate";
+		return "Verification of a certificate and corresponding chain";
 	}
 
 	@Override
 	public void execute(Map<String, String> parameters) {
 		try {
 			String certFileName = parameters.get("c");
-			String format = parameters.get("f");
-			String outPutMethod = parameters.get("o");
+			
+			if (certFileName == null) {
+				this.printHelp();
+				return;
+			}
 
 			byte[] certBytes = readFile(certFileName);
 			X509Certificate certToVerify = buildCertificate(certBytes);
@@ -62,7 +65,8 @@ public class VerifyChain extends CommandBase implements CommandInterface {
 			
 			while (true) {				
 				X509Certificate issuer = getCertificate(issuerName);
-				System.out.println(issuer);
+				System.out.println("Certificate to verfify:");
+				System.out.println(certToVerify);
 				
 				try {
 					certToVerify.verify(issuer.getPublicKey());
@@ -70,9 +74,9 @@ public class VerifyChain extends CommandBase implements CommandInterface {
 					System.out.println("Certificate could not be verified");
 					break;
 				}
-				System.out.println("Success");
+				System.out.println("Certificate successfully verified\n");
 				String nextIssuerName = getIssuerName(issuer);
-				if (nextIssuerName.equals(issuerName))
+				if (certToVerify.equals(issuer))
 					break;
 				certToVerify = issuer;
 				issuerName = nextIssuerName;
@@ -85,6 +89,8 @@ public class VerifyChain extends CommandBase implements CommandInterface {
 
 	@Override
 	public void printHelp() {
+		System.out.println("Command verifycert takes following parameter:");
+		System.out.println("\tMandatory:");
+		System.out.println("\t\t-c [certificate file]\tpath and name of certificate to verfiy (must be binary formatted)");
 	}
-
 }

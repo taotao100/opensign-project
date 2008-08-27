@@ -10,7 +10,7 @@ public class CertificateSignRequest extends CommandBase implements CommandInterf
 	
 	@Override
 	public String getDescription() {
-		return "CommandCertificateSignRequest";
+		return "Generation of a certificate by issuing a certificate sign request";
 	}
 
 	@Override
@@ -24,6 +24,11 @@ public class CertificateSignRequest extends CommandBase implements CommandInterf
 			
 			String format = parameters.get("f");
 			String outPutMethod = parameters.get("o");
+			
+			if (csr == null || issuer == null || password == null || user_name == null) {
+				this.printHelp();
+				return;
+			}
 			
 			if (format == null || format.equalsIgnoreCase("BIN"))
 				format = "BIN";
@@ -51,14 +56,15 @@ public class CertificateSignRequest extends CommandBase implements CommandInterf
 
 	@Override
 	public void printHelp() {
-		System.out.println("Mandatory:");
-		System.out.println("\t-i [issuer]\te.g \"root/user1/user2\"");		
-		System.out.println("\t-c [csr file]\tpath and name of csr file (must be in binary PKCS#10 formatted)");		
-		System.out.println("\t-p [password]");
-		System.out.println("\t-u [user name]");
-		System.out.println("Optional:");
-		System.out.println("\t-f [format]\t\"bin\" or \"pem\" whereas \"pem\" is default");
-		System.out.println("\t-o [out put method]\t\"console\" or \"file\"");
+		System.out.println("Command csr takes following parameter:");
+		System.out.println("\tMandatory:");
+		System.out.println("\t\t-i [issuer]\te.g \"root/user1/user2\"");		
+		System.out.println("\t\t-c [csr file]\tpath and name of csr file (must be binary PKCS#10 formatted)");		
+		System.out.println("\t\t-p [password]");
+		System.out.println("\t\t-u [user name]");
+		System.out.println("\tOptional:");
+		System.out.println("\t\t-f [response format]\t\"bin\" or \"pem\" whereas \"pem\" is default");
+		System.out.println("\t\t-o [out put method]\t\"console\" or \"file\"");
 	}
 
 }

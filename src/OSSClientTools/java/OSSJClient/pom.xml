@@ -4,7 +4,7 @@
 	<groupId>org.owasp.oss</groupId>
 	<artifactId>OSSJClient</artifactId>
 	<name>OSSJClient</name>
-	<version>0.1</version>
+	<version>0.9</version>
 	<description/>
 	<build>
 		<plugins>
