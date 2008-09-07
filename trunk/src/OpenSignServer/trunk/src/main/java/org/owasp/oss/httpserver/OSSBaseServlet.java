@@ -23,6 +23,7 @@ public class OSSBaseServlet extends HttpServlet {
 	protected User _user;
 	protected String _userName;
 	protected String _resourceName;
+	protected String _leftMenu;
 	private HttpServletRequest _req;
 	private HttpServletResponse _resp;
 
@@ -56,6 +57,7 @@ public class OSSBaseServlet extends HttpServlet {
 
 		template.setContent(_content);
 		template.setTitle(_title);
+		template.setLeftMenu(_leftMenu);
 		
 		if (_user == null) {
 			template.setUserName("guest");

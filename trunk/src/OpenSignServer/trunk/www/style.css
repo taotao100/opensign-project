@@ -9,6 +9,7 @@ body {
 	padding:0;
 	margin:0;
 }
+
 a {color: #DB7093;}
 a:visited {color:#DB7093;}
 a:hover {color: #564b47;}
@@ -43,7 +44,7 @@ background-color: #FFFFFF;
 /* ----------banner for logo-------------- */
 #banner {
 background-color: #FFFFFF;
-text-align: right;
+text-align: left;
 padding: 0px;
 margin: 0px;
 }
@@ -63,6 +64,14 @@ font-size: 40px;
 	border:1px solid grey;
 }
 
+#menu_box{
+	margin-right: 40px;
+	margin-top: 20px;
+	margin-bottom: 20px;	
+	font-size: 15px;	
+	text-align: center;
+	border:1px solid lightgrey;
+}
 /* -----------------content--------------------- */
 #content {
 background-color: #ffffff;

@@ -46,6 +46,10 @@ public class OSSHttpServer {
 		_contextServlets.addServlet(new ServletHolder(
 				new DefaultServlet()), "/style.css");
 		_contextServlets.addServlet(new ServletHolder(
+				new DefaultServlet()), "*.html");
+		_contextServlets.addServlet(new ServletHolder(
+				new DefaultServlet()), "*.js");
+		_contextServlets.addServlet(new ServletHolder(
 				new HomeServlet()), "/");
 		_contextServlets.addServlet(new ServletHolder(
 				new OpenSignResourceServlet()), "/root");
@@ -58,7 +62,10 @@ public class OSSHttpServer {
 		_contextServlets.addServlet(new ServletHolder(new RegisterServlet()),
 		"/register");
 		_contextServlets.addServlet(new ServletHolder(new EditUserProfileServlet()),
-		"/edit_profile");		
+		"/edit_profile");
+		_contextServlets.addServlet(new ServletHolder(new CertificateAuthorityServlet()),
+		"/ca");
+		
 		
 		
 		// During creation of the UserManager all resources are registered

@@ -33,6 +33,9 @@ public class LogoutServlet extends OSSBaseServlet {
 		_title = "Logout";
 		
 		log.info("User " + _userName + " has logged out");
+				
+		load(req, resp);
+		
 		send();
 	}
 }
