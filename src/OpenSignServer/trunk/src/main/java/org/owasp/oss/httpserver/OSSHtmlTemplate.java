@@ -5,12 +5,27 @@ public class OSSHtmlTemplate {
 	private String _content;
 	private String _userName;
 	private String _title;
+	private String _leftMenu;
 	private boolean _login = false;
 
 	public String build() {
-
-		String loginStr = (_login) ? "<span id=\"menu_link\"><a href=\"/logout\">logout</a></span>"
-				: "<span id=\"menu_link\"><a href=\"/login\">login</a></span>";
+		
+		String loginStr = "<span id=\"menu_link\"><a href=\"/login\">login</a></span>";
+		String settingStr = "<span id=\"menu_link\"><a href=\"/register\">register</a></span>";
+		if (_login) {
+			loginStr = "<span id=\"menu_link\"><a href=\"/logout\">logout</a></span>";			
+			settingStr = "<span id=\"menu_link\"><a href=\"/settings\">my settings</a></span>";
+		}
+		
+		if (_leftMenu == null || _leftMenu.length() == 0) {
+			_leftMenu = "";
+		} else {
+			_leftMenu = "<div id=\"menu_box\">" + _leftMenu + "</div>";
+		}
+						
+		
+		// + "<span id=\"menu_link\"><a href=\"/edit_profile\">edit profile</a></span>"
+		// + "<span id=\"menu_link\"><a href=\"/csr\">csr</a></span>"
 
 		String site = "<html>"
 				+ "<head>"
@@ -20,19 +35,23 @@ public class OSSHtmlTemplate {
 				+ "</head>" + "<body>" + "<div id=\"container\">"
 				+ "<div id=\"banner\" >"
 				+ "<span id=\"logo\">OpenSign Server</span>" + "<h1>"
-				+ "<span id=\"menu_link\"><a href=\"/csr\">csr</a></span>"
-				+ loginStr
-				+ "<span id=\"menu_link\"><a href=\"/edit_profile\">edit profile</a></span>"
-				+ "<span id=\"menu_link\"><a href=\"/register\">register</a></span>"
 				+ "<span id=\"menu_link\"><a href=\"/\">home</a></span>"
+				+ "<span id=\"menu_link\"><a href=\"/ca\">certificate authority</a></span>"				
+				+ settingStr
+				+ loginStr												
 				+ "</h1>"
 				+ "</div>"
 				+ "<div id=\"left\">"
+				+ "<div id=\"menu_box\">"
 				+ "<h2>"
 				+ _title
 				+ "</h2>"
-				+ "<br />user: "
+				+ "</div>"
+				+ "<div id=\"menu_box\">"
+				+ "user: "
 				+ _userName
+				+ "</div>"
+				+ _leftMenu
 				+ "</div>"
 				+ "<div id=\"right\">"
 				+ "</div>"
@@ -63,6 +82,10 @@ public class OSSHtmlTemplate {
 
 	public void setTitle(String title) {
 		_title = title;
+	}
+	
+	public void setLeftMenu(String leftMenu) {
+		_leftMenu = leftMenu;
 	}
 
 }
