@@ -17,12 +17,24 @@ a:active { color:#000000;}
 
 h1 {
 font-size: 11px;
-text-transform:uppercase;
 background-color: #E6E6FA;
 border-top:1px solid #564b47;
 border-bottom:1px solid #564b47;
-padding:5px 15px;
-margin-top:10px; }
+padding: 2px 25px;
+margin-top:10px; 
+}
+
+h1 a { 
+text-transform: uppercase;
+letter-spacing: 3px;
+color: #ffffff;
+text-decoration: none; 
+margin: 0;
+padding: 2px 25px;
+}
+
+h1 a:hover {color: #DB7093; background-color: #ffffff;}
+h1 a:active { color:#ffffff;}
 
 h2 {
 font-size:20px;
@@ -30,34 +42,36 @@ font-weight: normal;
 padding: 5px 10px;
 margin:0px;}
 
+
+
 img.download {vertical-align:middle;}
 
 /* ----------container zentriert das layout-------------- */
 #container {
-width: 900px;
-margin-bottom: 10px;
-margin-left: auto;
-margin-right: auto;
-background-color: #FFFFFF;
+	width: 900px;
+	margin-bottom: 10px;
+	margin-left: auto;
+	margin-right: auto;
+	background-color: #FFFFFF;
 }
 
 /* ----------banner for logo-------------- */
 #banner {
-background-color: #FFFFFF;
-text-align: left;
-padding: 0px;
-margin: 0px;
-}
-#banner img {padding:10px 0px;} 
+	background-color: #FFFFFF;
+	text-align: right;
+	padding: 0px;
+	margin: 10px;
+} 
 
 #logo{
-font-size: 40px;
+	font-size: 40px;
 }
 
 #menu_link{
 	margin-left: 20px;
 	margin-right: 20px;
 }
+
 #menu_input{
 	margin-left: 0px;
 	margin-right: 0px;
@@ -66,17 +80,19 @@ font-size: 40px;
 
 #menu_box{
 	margin-right: 40px;
-	margin-top: 20px;
+	margin-top: 15px;
 	margin-bottom: 20px;	
 	font-size: 15px;	
 	text-align: center;
 	border:1px solid lightgrey;
+	padding: 5px;
 }
+
 /* -----------------content--------------------- */
 #content {
 background-color: #ffffff;
 padding: 0;
-margin: 0 200px;
+margin: 30px 200px;
 }
 div#content { 
 min-height:600px;
