@@ -94,17 +94,17 @@ public class LoginServlet extends OSSBaseServlet {
 		if (login(req))
 			return;
 		
-		_title = "Login";
+		_title = "login";
 		
 		_content = 
 		"<form name=\"login\" action=\"/login\" method=\"POST\">" +
-			"<table><tr>" +
-					"<td>user name:</td><td><input id=\"menu_input\" name=\"user_name\" value=\"user1\" type=text size=40></td>" +
+			"<table><tr><td></td><td></td></tr><tr>" +
+					"<td>user name:</td><td><input name=\"user_name\" value=\"user1\" type=text ></td>" +
 				"</tr><tr>" +
-					"<td>password:</td><td><input id=\"menu_input\" name=\"password\" value=\"123\" type=text size=40></td>" +
+					"<td>password:</td><td><input name=\"password\" value=\"123\" type=text ></td>" +
 				"</tr><tr>" +
-					"<td></td><td><input id=\"menu_input\" type=\"submit\" value=\"submit\"></td>" +
-				"</tr>" +
+					"<td colspan=\"2\" align=\"center\"><input id=\"button\" type=\"submit\" value=\"submit\"></td>" +
+				"<tr></tr></tr>" +
 			"</table>" +
 		"</form>";			
 		

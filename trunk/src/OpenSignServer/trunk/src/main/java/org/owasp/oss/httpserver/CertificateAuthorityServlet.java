@@ -9,9 +9,10 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 
-public class LogoutServlet extends OSSBaseServlet {
-	
-	private static Logger log = Logger.getLogger(LogoutServlet.class);
+public class CertificateAuthorityServlet extends OSSBaseServlet {
+
+	private static Logger log = Logger
+			.getLogger(CertificateAuthorityServlet.class);
 
 	/*
 	 * (non-Javadoc)
@@ -23,19 +24,17 @@ public class LogoutServlet extends OSSBaseServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-		
+
 		load(req, resp);
 
-		HttpSession session = req.getSession();
-		session.invalidate();
-				
-		_content = "Successfully logged out!";
-		_title = "logout";
-		
-		log.info("User " + _userName + " has logged out");
-				
-		load(req, resp);
-		
+		_title = "certificate authority";
+
+		_content = "CA stuff";
+
+		_leftMenu = "ca services:<br />"
+				+ "<span id=\"menu_link\"><a href=\"/root\">root</a></span><br />"
+				+ "<span id=\"menu_link\"><a href=\"/csr\">csr</a></span>";
+
 		send();
 	}
 }

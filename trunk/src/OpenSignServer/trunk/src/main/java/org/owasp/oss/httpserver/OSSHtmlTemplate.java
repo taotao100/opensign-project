@@ -53,13 +53,13 @@ public class OSSHtmlTemplate {
 				+ _title
 				+ "</h2>"
 				+ "</div>"
+				+ _leftMenu
+				+ "</div>"
+				+ "<div id=\"right\">"
 				+ "<div id=\"menu_box\">"
 				+ "user: "
 				+ _userName
 				+ "</div>"
-				+ _leftMenu
-				+ "</div>"
-				+ "<div id=\"right\">"
 				+ _rightMenu
 				+ "</div>"
 				+ "<div id=\"content\">"

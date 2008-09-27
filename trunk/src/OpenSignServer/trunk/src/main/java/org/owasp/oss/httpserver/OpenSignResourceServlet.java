@@ -40,17 +40,15 @@ public class OpenSignResourceServlet extends OSSBaseServlet {
 	
 	private void buildSubEntitiesBlock() {
 		List<User> subEntitiesList = UserManager.getInstance().getAllSubEntities(_resourceName);
-		StringBuffer htmlBlock = new StringBuffer();
 		
-		_content += "<br /><br /><br />Sub-entities: <br /><ul>";
+		_leftMenu = "sub-entities:<br />";		
 		
 		Iterator<User> iter = subEntitiesList.iterator();
 		while (iter.hasNext()) {
 			User user = iter.next();
-			htmlBlock.append("<li><a href=\"" + user.getResourceName() + "\">" + user.getResourceName() + "</a></li>\r\n");
+			_leftMenu += "<span id=\"menu_link\"><a href=\"/" + user.getResourceName() + "\">" + user.getResourceName() + "</span><br />\r\n";
 		}
-		_content += "</ul>";
-		_content += htmlBlock.toString();
+
 	}
 	
 	/*

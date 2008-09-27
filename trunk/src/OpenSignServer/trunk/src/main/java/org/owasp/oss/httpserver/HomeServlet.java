@@ -22,7 +22,7 @@ public class HomeServlet extends OSSBaseServlet {
 			throws ServletException, IOException {
 		
 		load(req, resp);
-		_title = "Home";
+		_title = "home";
 		_content = "<h2>Welcome to the OpenSign server project!</h2>" +
 			"<br />" +			
 			"<br />" +

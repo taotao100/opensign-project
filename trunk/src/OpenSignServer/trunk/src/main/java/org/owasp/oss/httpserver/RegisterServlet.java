@@ -42,14 +42,14 @@ public class RegisterServlet extends OSSBaseServlet {
 		_title = "register";
 
 		_content = "<form name=\"login\" action=\"/register\" method=\"POST\">"
-				+ "<table><tr><td>super:</td><td><select name=\"super_resource\">"
+				+ "<table><tr><td></td><td></td></tr><tr><td>super:</td><td><select name=\"super_resource\">"
 				+ getIssuers()
 				+ "</select></td></tr>"
-				+ "<tr><td>is issuer:</td><td><input id=\"menu_input\" name=\"is_issuer\" type=\"checkbox\"></td></tr>"
+				//+ "<tr><td>is issuer:</td><td><input id=\"menu_input\" name=\"is_issuer\" type=\"checkbox\"></td></tr>"
 				+ "<tr><td>user name:</td><td><input id=\"menu_input\" name=\"user_name\" value=\"user1\" type=text size=40></td></tr>"
 				+ "<tr><td>password:</td><td><input id=\"menu_input\" name=\"password\" value=\"123\" type=text size=40></td></tr>"
 				+ "<tr><td></td><td><input id=\"menu_input\" type=\"submit\" value=\"register\"></td>"
-				+ "</tr>" + "</table>" + "</form>";
+				+ "<tr><td></td><td></td></tr></tr>" + "</table>" + "</form>";
 
 		send();
 
