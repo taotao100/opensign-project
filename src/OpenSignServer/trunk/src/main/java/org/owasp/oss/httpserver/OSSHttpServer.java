@@ -61,8 +61,8 @@ public class OSSHttpServer {
 		"/csr");
 		_contextServlets.addServlet(new ServletHolder(new RegisterServlet()),
 		"/register");
-		_contextServlets.addServlet(new ServletHolder(new EditUserProfileServlet()),
-		"/edit_profile");
+		_contextServlets.addServlet(new ServletHolder(new UserSettingsServlet()),
+		"/settings");
 		_contextServlets.addServlet(new ServletHolder(new CertificateAuthorityServlet()),
 		"/ca");
 		

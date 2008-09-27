@@ -11,40 +11,56 @@ body {
 }
 
 a {color: #DB7093;}
-a:visited {color:#DB7093;}
 a:hover {color: #564b47;}
 a:active { color:#000000;}
 
 h1 {
-font-size: 11px;
-background-color: #E6E6FA;
-border-top:1px solid #564b47;
-border-bottom:1px solid #564b47;
-padding: 2px 25px;
-margin-top:10px; 
+	font-size: 11px;
+	background-color: #E6E6FA;
+	border-top:1px solid #564b47;
+	border-bottom:1px solid #564b47;
+	padding: 2px 25px;
+	margin-top:10px; 
 }
 
 h1 a { 
-text-transform: uppercase;
-letter-spacing: 3px;
-color: #ffffff;
-text-decoration: none; 
-margin: 0;
-padding: 2px 25px;
+	text-transform: uppercase;
+	color: #564b47;
+	letter-spacing: 3px;	
+	text-decoration: none; 
+	margin: 0;
+	padding: 2px 25px;
 }
 
 h1 a:hover {color: #DB7093; background-color: #ffffff;}
-h1 a:active { color:#ffffff;}
 
 h2 {
-font-size:20px;
-font-weight: normal;
-padding: 5px 10px;
-margin:0px;}
+	font-size:20px;
+	font-weight: normal;
+	padding: 5px 10px;
+	margin:0px;
+}
 
+table {
+	margin:5px;
+	width:100%;
+}
 
+th{
+	background-color: #C0C0C0;
+	padding: 1px;
+	height: 2.2em;
+}
 
-img.download {vertical-align:middle;}
+tr{
+	background-color: #E6E6FA;
+	padding: 1px;
+	height: 1.8em;
+}
+
+#tableCheckbox{
+	width:50px;
+}
 
 /* ----------container zentriert das layout-------------- */
 #container {
@@ -52,7 +68,7 @@ img.download {vertical-align:middle;}
 	margin-bottom: 10px;
 	margin-left: auto;
 	margin-right: auto;
-	background-color: #FFFFFF;
+	background-color: #FFFFFF; 
 }
 
 /* ----------banner for logo-------------- */
@@ -72,14 +88,20 @@ img.download {vertical-align:middle;}
 	margin-right: 20px;
 }
 
-#menu_input{
+input{
 	margin-left: 0px;
 	margin-right: 0px;
 	border:1px solid grey;
+	width: 200px;
 }
 
+input#button {
+	width: 100px;
+	border:1px solid grey;
+}
+
+
 #menu_box{
-	margin-right: 40px;
 	margin-top: 15px;
 	margin-bottom: 20px;	
 	font-size: 15px;	
@@ -90,13 +112,16 @@ img.download {vertical-align:middle;}
 
 /* -----------------content--------------------- */
 #content {
-background-color: #ffffff;
-padding: 0;
-margin: 30px 200px;
+	background-color: #ffffff;
+	padding: 0;
+	margin-left:200px;
+	margin-right:200px;
+	margin-top:20px;
+	overflow: hidden; 
 }
-div#content { 
-min-height:600px;
-height:expression(this.scrollHeight > 600 ? "auto":"600px"); 
+div#content { 	
+	min-height:600px;
+	height:expression(this.scrollHeight > 600 ? "auto":"600px"); 
 }
 
 p, pre{
@@ -107,20 +132,27 @@ margin:0;
 #certificate {
 	font-family: Courier, Arial, SunSans-Regular, Sans-Serif;
 	font-size: 10px;
+	width:300px;
 }
 
+#notification {
+	border: 2px solid #FF8C00;
+	padding: 1px;
+	text-align: center;
+	margin-bottom: 10px;
+}
 /* --------------left navigavtion------------- */
 #left {
-float: left;
-width: 200px;
-margin: 0px;
-padding: 0px;
+	float: left;
+	width: 170px;
+	margin: 0px;
+	padding: 0px;	
 }
 #right {
 	float: right;
-	width: 200px;
-	margin: 0;
-	padding: 0;
+	width: 170px;
+	margin: 0px;
+	padding: 0px;
 }
 /* -----------footer--------------------------- */
 #footer {

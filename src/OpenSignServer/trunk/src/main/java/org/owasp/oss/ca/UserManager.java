@@ -49,7 +49,8 @@ public class UserManager {
 			Iterator<User> iter = users.iterator();
 			while (iter.hasNext()) {
 				User user = iter.next();
-				registerUser(user);
+				OSSHttpServer.getInstance().registerOsResource(
+						user.getResourceName());
 			}
 		}
 	}

@@ -18,6 +18,7 @@ public class User {
 	private String emailAddress;	
 	private String resourcePath;
 	private String resourceName;
+	private boolean isApproved = false;
 	private boolean isIssuer = false;
 		
 	@Id
@@ -75,5 +76,11 @@ public class User {
 	}
 	public void setResourceName(String resourceName) {
 		this.resourceName = resourceName;
+	}
+	public boolean isApproved() {
+		return isApproved;
+	}
+	public void setApproved(boolean isApproved) {
+		this.isApproved = isApproved;
 	}
 }
