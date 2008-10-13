@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.owasp.oss.ca.CertificationAuthority;
+import org.owasp.oss.ca.CertificationAuthorityException;
 import org.owasp.oss.ca.UserManager;
 import org.owasp.oss.ca.model.User;
 
@@ -67,6 +69,7 @@ public class UserSettingsServlet extends OSSBaseServlet {
 		_content += "<form name=\"settings\" action=\"settings\" method=\"post\">"
 				+ "<input type=\"hidden\" name=\"profile\" value=\"1\">"
 				+ "<table>"
+				+ "<tr><td colspan=\"2\"></td></tr>"
 				+ "<tr><td>user name</td><td>"
 				+ _user.getUserName()
 				+ "</td></tr>"
@@ -178,6 +181,14 @@ public class UserSettingsServlet extends OSSBaseServlet {
 						&& subUser.isIssuer() == false) {
 					subUser.setIssuer(true);
 					um.storeUser(subUser);
+					// register with CA
+					try {
+						CertificationAuthority.getInstance().createIssuer(subUser);
+					} catch (CertificationAuthorityException e) {
+						_content = "<div id=\"notification\">Error during key creation occured.</div>";
+						send();
+						return;
+					}
 				}
 			}
 		}
