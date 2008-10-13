@@ -15,7 +15,19 @@ import org.owasp.oss.ca.model.User;
 public class LoginServlet extends OSSBaseServlet {
 
 	private static Logger log = Logger.getLogger(OpenSignResourceServlet.class);
-	
+
+	private String getLoginForm() {
+		return "<form name=\"login\" action=\"/login\" method=\"POST\">"
+				+ "<table><tr><td colspan=\"2\"></td></tr><tr>"
+				+ "<td>user name:</td><td><input name=\"user_name\" type=text ></td>"
+				+ "</tr><tr>"
+				+ "<td>password:</td><td><input type=\"password\" name=\"password\" type=text ></td>"
+				+ "</tr><tr>"
+				+ "<td colspan=\"2\" align=\"center\"><input id=\"button\" type=\"submit\" value=\"submit\"></td>"
+				+ "</tr><tr><td colspan=\"2\"></td></tr>" + "</table>"
+				+ "</form>";
+	}
+
 	private boolean login(HttpServletRequest req) throws IOException {
 		HttpSession session = req.getSession();
 		String userName = req.getParameter("user_name");
@@ -24,23 +36,24 @@ public class LoginServlet extends OSSBaseServlet {
 			// New login attempt
 			User user = UserManager.getInstance().getUser(userName);
 			if (user != null) {
-				if (user.getPassword() != null && user.getPassword().equals(password)) {
+				if (user.getPassword() != null
+						&& user.getPassword().equals(password)) {
 					session.setAttribute("user", user);
-					
+
 					_user = user;
 					_userName = userName;
 					_content = "Successfully logged in!";
 					_title = "Login";
-					
+
 					log.info("User " + _userName + " has logged in");
-					
+
 					return true;
 				}
-			}			
-		} 
+			}
+		}
 		return false;
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -51,12 +64,14 @@ public class LoginServlet extends OSSBaseServlet {
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-		
+
 		this.load(req, resp);
 		
+		_title = "Login";
+
 		HttpSession session = req.getSession();
 		String userName = req.getParameter("user_name");
-		String password = req.getParameter("password");					
+		String password = req.getParameter("password");
 
 		if (userName != null || password != null) {
 			// New login attempt
@@ -64,52 +79,46 @@ public class LoginServlet extends OSSBaseServlet {
 			if (user != null) {
 				if (user.getPassword().equals(password)) {
 					session.setAttribute("user", user);
-					
+
 					_user = user;
 					_userName = userName;
-					_content = "Successfully logged in!";
-					_title = "Login";
-					
+					_content = "Successfully logged in!";					
+
 					log.info("User " + _userName + " has logged in");
-					
+
 					send();
 					return;
 				}
-			}			
-		} 
-		
-		resp.sendRedirect("error.html");
+			}
+		}
+
+		_content = "<div id=\"notification\">User name or password incorrect</div><br />";
+		_content += getLoginForm();
+		send();
 	}
-	
-	/* (non-Javadoc)
-	 * @see javax.servlet.http.HttpServlet#doGet(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * javax.servlet.http.HttpServlet#doGet(javax.servlet.http.HttpServletRequest
+	 * , javax.servlet.http.HttpServletResponse)
 	 */
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-		
+
 		load(req, resp);
-		
+
 		// TODO: remove
 		if (login(req))
 			return;
-		
+
 		_title = "login";
-		
-		_content = 
-		"<form name=\"login\" action=\"/login\" method=\"POST\">" +
-			"<table><tr><td></td><td></td></tr><tr>" +
-					"<td>user name:</td><td><input name=\"user_name\" value=\"user1\" type=text ></td>" +
-				"</tr><tr>" +
-					"<td>password:</td><td><input name=\"password\" value=\"123\" type=text ></td>" +
-				"</tr><tr>" +
-					"<td colspan=\"2\" align=\"center\"><input id=\"button\" type=\"submit\" value=\"submit\"></td>" +
-				"<tr></tr></tr>" +
-			"</table>" +
-		"</form>";			
-		
+
+		_content = getLoginForm();
+
 		send();
 	}
 
-	
 }
