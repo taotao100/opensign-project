@@ -14,6 +14,9 @@
         <include>readme_src.txt</include>
         <include>readme.txt</include>
       </includes>
+	  <excludes>
+        <exclude>log/oss.log</exclude>       
+      </excludes>
     </fileSet>  
     <fileSet>
 	  <directory>target</directory>

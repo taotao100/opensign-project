@@ -31,11 +31,12 @@ public class HomeServlet extends OSSBaseServlet {
 					"<ul><a href=\"root?property=cert&responseFormat=PEM\"> PEM </a></ul>" +
 				"</p>" +
 			"<br />" +
-				"<p>Additional sites:" + 
-					"<ul><a href=\"csr\"> certificate sign request </a></ul>" +
+				"<p>Additional sites:" + 					
 					"<ul><a href=\"login\"> login </a></ul>" +
 					"<ul><a href=\"logout\"> logout </a></ul>" +
-					"<ul><a href=\"register\"> register </a></ul>" + 					
+					"<ul><a href=\"register\"> register </a></ul>" +
+					"<ul><a href=\"csr\"> certificate sign request (protected)</a></ul>" +
+					"<ul><a href=\"settings\"> settings (protected)</a></ul>" +
 				"</p>";		  
 		send();
 	}
