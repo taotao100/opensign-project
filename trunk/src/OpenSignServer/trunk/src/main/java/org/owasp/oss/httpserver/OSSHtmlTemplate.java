@@ -37,6 +37,7 @@ public class OSSHtmlTemplate {
 				+ "<link type=\"text/css\" href=\"/style.css\" rel=\"stylesheet\" media=\"screen\" />"
 				+ "<title>Open Sign Server</title>"
 				+ "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />"
+				+ getJavaScript()
 				+ "</head>"
 				+ "<body>"
 				+ "<div id=\"container\">"
@@ -61,18 +62,42 @@ public class OSSHtmlTemplate {
 				+ _userName
 				+ "</div>"
 				+ _rightMenu
-				+ "</div>"
+				+ getAboutBox()
+				+ "</div>"				
 				+ "<div id=\"content\">"
 				+ "<h2>"
 				+ "</h2>"
 				+ _content
 				+ "</div>"
 				+ "<div id=\"footer\">"
-				+ "<h1>&copy 2008 Richard, Phil</h1></div>"
+				+ "<h1>&copy 2008 OpenSign <a onmouseover=\"showAbout();\">About</a></h1></div>"
 				+ "</div>"
 				+ "</body>" + "</html>";
 		return site;
 
+	}
+
+	private String getJavaScript() {
+		return "<script>"
+				+ "function showAbout() {"
+				+ "document.getElementById('menu_box_hide').style.display=\"\";"
+				+ "}"
+				+ "function hideAbout() {"
+				+ "document.getElementById('menu_box_hide').style.display=\"none\";"
+				+ "}" + "</script>";
+	}
+
+	private String getAboutBox() {
+		return "<div id=\"menu_box_hide\" style=\"display: none;\" onmouseover=\"showAbout();\" onmouseout=\"hideAbout();\">"
+				+ "<p><b>About</b></p>"
+				+ "<p>Authors<br />"
+				+ "<a href=\"mailto:philipp.potisk@gmail.com\"> Philipp Potisk</a><br />"
+				+ "<a href=\"mailto:techierebel@yahoo.co.uk\">Richard Conway</a><br />"
+				+ "</p>"
+				+ "<p>Version<br />0.5</p>"
+				+ "<p>Release Date<br />14th of October 2008</p>"
+				+ "<p>Homepage<br /><a  href=\"https://www.owasp.org/index.php/Project_Information:template_OpenSign_Server_Project\">OpenSign Server</a><p>"
+				+ "</div>";
 	}
 
 	public void setLogin(boolean value) {

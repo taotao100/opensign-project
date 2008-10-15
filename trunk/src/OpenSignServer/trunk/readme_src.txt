@@ -19,7 +19,6 @@ This file elaborates the necessary steps to build the project from it's sources.
 	If intending to use a data base one will need to download and install MYSQL data base and set the storage type to MYSQL in file config.properties.
 	Make sure the MYSQL database has a account with the user name 'root' and empty password, which is the default configuration of MYSQL anyway.
 	
-
 	The project will now compile from command line (see section Maven Targets).
 	
 	
@@ -35,7 +34,7 @@ This file elaborates the necessary steps to build the project from it's sources.
 	Help -> Software updates ... -> Add site: 
 	http://m2eclipse.sonatype.org/update/
 	
-	Import OpenSignServer as Maven project as Maven project:
+	Import OpenSignServer as Maven project:
 	File -> Import ... -> General -> Maven projects -> ...
 	
 	Maven Targets (see following section) may now be executed from eclipse by a 

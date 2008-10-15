@@ -110,6 +110,15 @@ input#button {
 	padding: 5px;
 }
 
+#menu_box_hide{
+	margin-top: 15px;
+	margin-bottom: 20px;	
+	font-size: 15px;	
+	text-align: center;
+	border:1px solid lightgrey;
+	padding: 5px;
+}
+
 /* -----------------content--------------------- */
 #content {
 	background-color: #ffffff;
@@ -125,8 +134,8 @@ div#content {
 }
 
 p, pre{
-padding: 5px 10px;
-margin:0;
+	padding: 5px 10px;
+	margin:0;
 }
 
 #certificate {
@@ -156,7 +165,8 @@ margin:0;
 }
 /* -----------footer--------------------------- */
 #footer {
-clear: both;
-margin: 0px;
-padding: 0px;
-text-align: right; }
+	clear: both;
+	margin: 0px;
+	padding: 0px;
+	text-align: right; 
+}
