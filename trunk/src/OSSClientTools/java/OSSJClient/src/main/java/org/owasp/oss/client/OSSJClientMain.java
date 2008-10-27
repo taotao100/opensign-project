@@ -38,7 +38,7 @@ public class OSSJClientMain {
 	}
 	
 	public static void printUsage() {
-		System.out.println("Usage: run.bat [command]");
+		System.out.println("Usage: java -jar OSSJClient-[version].jar [command]");
 		System.out.println("Following commads supported:");
 		Set<String> keys = _commands.keySet();
 		Iterator<String> i = keys.iterator();

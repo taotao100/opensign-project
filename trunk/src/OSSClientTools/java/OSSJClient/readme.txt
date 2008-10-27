@@ -2,7 +2,8 @@
 *                  OPEN SIGN SERVER Java Client - README                      *
 *******************************************************************************
 
-This file describes how the Java client interacts with the OpenSign server.
+This file describes the usage of the Java client application, which interacts 
+with the OpenSign server.
 
 == Prerequisites ==
 
@@ -11,9 +12,18 @@ This file describes how the Java client interacts with the OpenSign server.
 	o Download and unpack OSSJClient-X.X-bin.tar.gz package
 
 
-== Supported Features ==
+== Usage ==
 
-TBC
+Command for executing the client:
+
+	java -jar OSSJClient-1.0.jar
+	
+All supported commands are listed in the console.
+To get an detailed overview of the intention of a specific command enter:
+
+	java -jar OSSJClient-1.0.jar [command name]
+	
+
 
 
 
