@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.owasp.oss</groupId>
 	<artifactId>OpenSignServer</artifactId>
-	<version>0.5</version>
+	<version>1.0</version>
 	<description>
 	</description>
 
@@ -128,9 +128,9 @@
 
 	<reporting>
 		<plugins>
-			<!--<plugin>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        </plugin>-->
+			<plugin>
+				<artifactId>maven-javadoc-plugin</artifactId>
+			</plugin>
 		</plugins>
 	</reporting>
 

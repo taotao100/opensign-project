@@ -29,7 +29,7 @@ public class RegisterServlet extends OSSBaseServlet {
 
 	private String getRegisterForm() {
 		return "<form name=\"login\" action=\"/register\" method=\"POST\">"
-				+ "<table><tr><td colspan=\"2\"></td><td></td></tr><tr><td>super:</td><td><select name=\"super_resource\">"
+				+ "<table><tr><td colspan=\"2\"></td><td></td></tr><tr><td>issuer:</td><td><select name=\"super_resource\">"
 				+ getIssuers()
 				+ "</select></td></tr>"
 				// +
