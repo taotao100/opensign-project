@@ -31,7 +31,7 @@ public class RESTClient {
 		Iterator<String> i = k.iterator();
 		while (i.hasNext()) {
 			String key = i.next();
-			System.out.println(key);
+			//System.out.println(key);
 			
 			if (key != null && key.equals("Set-Cookie")) {
 				_sessionId = h.get(key).get(0); //JSESSIONID=1is0rzuw6ki1g;Path=/ - Set-Cookie
@@ -41,7 +41,7 @@ public class RESTClient {
 			List<String> l = h.get(key);
 			Iterator<String> il = l.iterator();
 			while (il.hasNext()) {
-				System.out.println(il.next());
+				//System.out.println(il.next());
 			}
 		}
 	}
