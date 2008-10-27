@@ -29,7 +29,8 @@ public class CertificateAuthorityServlet extends OSSBaseServlet {
 
 		_title = "certificate authority";
 
-		_content = "CA stuff";
+		_content = "<p>The certificate authority issues certificate for users having the corresponding privileges. This service may be used online at <a href=\"/csr\">csr</a> or by use of the OpenSign client application.<br />"
+				+ "Furthermore, the certificate authority allows concerned users to brows the X.509 hierarchy starting at <a href=\"/root\">root</a> as the top-level issuer.</p>";
 
 		_leftMenu = "ca services:<br />"
 				+ "<span id=\"menu_link\"><a href=\"/root\">root</a></span><br />"

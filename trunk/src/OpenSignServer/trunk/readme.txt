@@ -32,7 +32,7 @@ brief overview of the usage is given.
 
 	o Windows: Click on run.bat
 
-	o Linux: java -jar jar\OpenSignServer-0.1.jar
+	o Linux: java -jar jar\OpenSignServer-1.0.jar
 
     Server starts at: http://localhost:8080, whereas the port is configurable
 
@@ -43,7 +43,7 @@ brief overview of the usage is given.
     
     o To enable a user to use the certification service the user above (issuer 
       privileges) must approve the user first. Furthermore, it is the choice of 
-      the issuer above whether or not the requesting user gets issuer privileges 
+      the issuer whether or not the requesting user gets issuer privileges 
       himself.
       
       *************************************************************************

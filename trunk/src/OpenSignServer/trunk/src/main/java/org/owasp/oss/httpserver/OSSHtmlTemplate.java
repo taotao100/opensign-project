@@ -94,8 +94,8 @@ public class OSSHtmlTemplate {
 				+ "<a href=\"mailto:philipp.potisk@gmail.com\"> Philipp Potisk</a><br />"
 				+ "<a href=\"mailto:techierebel@yahoo.co.uk\">Richard Conway</a><br />"
 				+ "</p>"
-				+ "<p>Version<br />0.5</p>"
-				+ "<p>Release Date<br />14th of October 2008</p>"
+				+ "<p>Version<br />1.0</p>"
+				+ "<p>Release Date<br />26st of October 2008</p>"
 				+ "<p>Homepage<br /><a  href=\"https://www.owasp.org/index.php/Project_Information:template_OpenSign_Server_Project\">OpenSign Server</a><p>"
 				+ "</div>";
 	}
