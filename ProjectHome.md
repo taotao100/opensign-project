@@ -1,0 +1,8 @@
+## Summary ##
+
+The service will allow all .NET and Java code modules to be uploaded to the service to be signed by a community code signing key. Each community (such as OWASP) will have a key and corresponding Software Publishing Certificate (SPC) which can optionally be embedded in the code module itself. Generally, however, the service is intended for developers and the wider community of concerned users that want to ensure that their downloaded portable executable is exactly what it purports to be. The root key will be stored in an HSM and will sign an SPC from a locally generated key-pair of which the public key will be sent to the service. Key pair generation can be made and submitted using standard .NET delay signing and jar signing tools distributed with the SDKs, however, the project remit will ensure that a client-side graphical tool for each environment is available to generate the keys pairs needed to sign code with and allow submission to the code signing service for signing and generation of SPC by the server's proprietary CA. Anonymity will not be allowed so the project will include a database of users which will be the basis of directory for SPCs.
+
+There will be a web and web services interface using an online login and WS-Security respectively which will allow the code to be uploaded on demand and signed by a code signing key with the option to embed the certificate or not.
+
+
+## [Project Homepage](https://www.owasp.org/index.php/Project_Information:template_OpenSign_Server_Project) ##
